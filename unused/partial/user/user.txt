@@ -1,0 +1,5 @@
+This is an explanation of the user partial file::
+
+This file is for the parts of the users page after being logged in.
+The reason is to allow users to register, and have access to protected things that the non-registered public do not have access to
+This will have a few pages to come but as of yet only the registration section has been written.

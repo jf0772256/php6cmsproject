@@ -1,0 +1,24 @@
+###
+### The intent of the PHP6 file is to work on creating a controller and user
+### access page from php, This will connect to the database and create tables
+### as needed and then fill them with data later.
+
+### this project uses models and the database is controlled completely from one
+### database.php :)
+### tables.php is where tables are defined and created, this file is run when the page is loaded, only if the tables are not
+### generated will it do anything though, this file can be found in 'database/tables.php'.
+
+## Changes since last sending a compressed version out::
+#############################################################
+## added field to the Users table (If you have created a database You will have to drop all of the tables and rebuild them (reload page))
+## corrected password salting and hash so it is done correctly.
+## added log in ability
+## added log out ability
+## added auto page refresh on log in or out.
+## added update to last_visited in users table, updated each time you log on.
+## login options hide on successful login, and show when logged out.
+## added a debug index for use to debug and work on page concepts, this file can be found in 'unused/index.php'.
+## added user dash board, which does not yet have full functionality but should soon.
+## Moved the databse table generation script run to a special file in a installation folder
+#### under the administration folder
+## created directory lock out error pages if they are attempted to be accessed through the browser (index.php's)

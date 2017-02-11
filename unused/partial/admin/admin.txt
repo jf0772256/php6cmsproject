@@ -1,0 +1,5 @@
+###ADMIN Partial File###
+Since the site will only use 1 page, and will include and interact with the database with the admin partials rather than wholey seperate pages
+This is what I believe is called a MVC setup... The view is the index, model is Admin, and the partials are the parts of the page that make up the dashboard.
+
+This is the next major portion of the project.
