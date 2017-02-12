@@ -45,12 +45,13 @@ function get_all_posts(){
     foreach ($all_post_Data as $key => $posts) {
       $Title = $all_post_Data[$key]["postTitle"];
       $PostBody = $all_post_Data[$key]["postBody"];
+      $Author = $all_post_Data[$key]["postAuthor"];
       $Writer = "";
       echo '<div>';
       echo '<section>';
       echo '<article>';
       echo "<h3>$Title</h3>";
-      echo "<h4></h4>";
+      echo "<h4>By: $Author</h4>";
       echo "<p>$PostBody</p>";
       echo '<form method="post">';
       echo "<input type='submit' name='dummybtn0' class='btn btn-primary' value='Read More'>";
