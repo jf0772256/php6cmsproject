@@ -1,3 +1,8 @@
+<?php
+  global $disp_msg_cnt, $err_msg;
+  $disp_msg_cnt = check_new_messages($_SESSION["personID"]);
+?>
+
   <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -44,7 +49,7 @@
             <div class="col-xs-12">
               <div class="form-group">
                 <!-- <input type="submit" name="readMessages" value="Read Messages" class="btn btn-primary btn-block"> -->
-                <button type="submit" name="readMessages" class="btn btn-primary btn-block">Read Messages <span class="badge"><?php check_new_messages($_SESSION["personID"]); ?></span></button>
+                <button type="submit" name="readMessages" class="btn btn-primary btn-block">Read Messages <?php echo "<span class='badge'>$disp_msg_cnt</span>"; ?></button>
               </div>
             </div>
           </div>
