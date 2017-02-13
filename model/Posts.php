@@ -20,7 +20,7 @@ function set_new_post(){
     var_dump($stmnt->error);
   }else{
     echo "<p class='alert alert-success'>The Post was successfully created.</p>";
-    set_new_post($_SESSION["personID"]);
+    set_post_count($_SESSION["personID"]);
   }
 }
 
@@ -28,25 +28,33 @@ function get_post_count($user){
   global $db;
   $query = "SELECT Posts FROM Users WHERE userID = ?"; //query string
   $stmnt = $db -> prepare($query);
+  if (!$stmnt) {
+    echo var_dump($stmnt->error);
+  }
   $stmnt -> bind_param("i",$user);
   if (!$stmnt->execute()){
     echo var_dump($stmnt->error);
   }else{
     $result = $stmnt -> get_result();
     $data = $result -> fetch_assoc();
-    echo var_dump($data);
-    //return $data["Posts"];
+    //echo var_dump($data);
+    return $data["Posts"];
   }
 }
 
 function set_post_count($user){
   global $db;
   $pcount = get_post_count($user);
-  $query = "UPDATE Posts SET Posts = $pcount + 1 WHERE userID = ?";
+  $query = "UPDATE Users SET Posts = $pcount + 1 WHERE userID = ?";
   $stmnt = $db -> prepare($query);
-  if(!$stmnt -> execute()){
+  if (!$stmnt) {
+    echo var_dump($db->error);
+  }
+  $stmnt -> bind_param("i",$user);
+  if(!$stmnt->execute()){
     echo var_dump($stmnt->error);
   }else{
+    $pcount = get_post_count($user);
     $_SESSION["PostCount"] = $pcount;
   }
 }
