@@ -14,7 +14,8 @@ function check_new_messages($user){
   $stmnt -> bind_param("i", $user);
 
   if(!$stmnt -> execute()){
-    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+    //$dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+    echo var_dump($stmnt->error);
   }
   $result = $stmnt -> get_result();
   while ($data = $result->fetch_assoc()){
@@ -22,6 +23,37 @@ function check_new_messages($user){
   }
 
   $value = (int)($count_Data[0]['NewMessages']);
-  return $value;
+  // echo var_dump($value);
+  $test = (int)("4");
+  return $test;
+}
+function get_emailList($user){
+  global $db;
+  //gets a list of PMs from server and returns them based on recip userID
+}
+function new_messagepost(){
+  global $db;
+  //sends PM to server to be retrieved, this is for new mailposts and replies.
+  $messageSubject = $_POST["messageSubject"];
+  $messageSender = $_POST["messageSender"];
+  $messageRecipent = $_POST["mailListContct"];
+  $messageBody = $_POST["messageBody"];
+
+  $query = "INSERT INTO mailmessages
+  (
+    MessageSender , MessageRecipent , MessageSubject , MessageBody , MessageTimeSent
+  )
+  VALUES
+  (
+    ? , ? , ? , ? , CURRENT_TIMESTAMP
+  )";
+
+  $stmnt = $db -> prepare($query);
+  echo var_dump($stmnt->error);
+  $stmnt -> bind_param("iiss", $messageSender, $messageRecipent, $messageSubject, $messageBody);
+  if (!$stmnt->execute()){
+    echo var_dump($stmnt->error);
+  }
+  
 }
 ?>
