@@ -9,23 +9,23 @@ function set_new_post(){
   $pBody = filter_input(INPUT_POST,'postBody',FILTER_DEFAULT);
   $PosterID = $_SESSION["personID"];
 
-  $query = "INSERT INTO posts (userID , postTitle , postSlug , postBody) VALUES (? , ? , ? , ? )";
-  $stmnt = $db -> prepare($query);
-  $stmnt -> bind_param("isss",$PosterID,$pTitle,$pSlug,$pBody);
-  $result = $stmnt -> execute();
-  if(!$result){
-    echo "<p class='alert alert-danger'>The Post didnt get created successfully.</p>";
-    var_dump($stmnt->error);
-  }else{
-    echo "<p class='alert alert-success'>The Post was successfully created.</p>";
-    $pCount = $_SESSION["PostCount"];
-    $query = "UPDATE users SET posts = $pCount + 1 WHERE userID = $PosterID";
-    $_SESSION["PostCount"] = ($pCount +1);
-    //updates post count
-    $query = "UPDATE users SET Posts = $_SESSION[PostCount]";
-    $stmnt = $db -> prepare($query);
-    $stmnt -> execute();
-  }
+  // $query = "INSERT INTO posts (userID , postTitle , postSlug , postBody) VALUES (? , ? , ? , ? )";
+  // $stmnt = $db -> prepare($query);
+  // $stmnt -> bind_param("isss",$PosterID,$pTitle,$pSlug,$pBody);
+  // $result = $stmnt -> execute();
+  // if(!$result){
+  //   echo "<p class='alert alert-danger'>The Post didnt get created successfully.</p>";
+  //   var_dump($stmnt->error);
+  // }else{
+  //   echo "<p class='alert alert-success'>The Post was successfully created.</p>";
+  //   $pCount = $_SESSION["PostCount"];
+  //   $query = "UPDATE users SET posts = $pCount + 1 WHERE userID = $PosterID";
+  //   $_SESSION["PostCount"] = ($pCount +1);
+  //   //updates post count
+  //   $query = "UPDATE users SET Posts = $_SESSION[PostCount]";
+  //   $stmnt = $db -> prepare($query);
+  //   $stmnt -> execute();
+  // }
 }
 function get_all_posts(){
   //get all values
