@@ -9,7 +9,7 @@ function set_new_post(){
   $pBody = filter_input(INPUT_POST,'postBody',FILTER_DEFAULT);
   $PosterID = $_SESSION["personID"];
 
-  echo var_dump($_SESSION); //should print out the whole session array
+  //echo var_dump($_SESSION); //should print out the whole session array
 
   $query = "INSERT INTO posts (userID , postTitle , postSlug , postBody) VALUES (? , ? , ? , ? )";
   $stmnt = $db -> prepare($query);
@@ -42,7 +42,7 @@ function get_post_count($user){
 function set_post_count($user){
   global $db;
   $pcount = get_post_count($user);
-  $query = "UPDATE Posts SET Posts = $pcount WHERE userID = ?";
+  $query = "UPDATE Posts SET Posts = $pcount + 1 WHERE userID = ?";
   $stmnt = $db -> prepare($query);
   if(!$stmnt -> execute()){
     echo var_dump($stmnt->error);
