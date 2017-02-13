@@ -46,7 +46,7 @@ function new_messagepost(){
   VALUES
   (
     ? , ? , ? , ? , CURRENT_TIMESTAMP
-  )";
+  )"; 
 
   $stmnt = $db -> prepare($query);
   $stmnt -> bind_param("iiss", $messageSender, $messageRecipent, $messageSubject, $messageBody);
