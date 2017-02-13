@@ -2,12 +2,12 @@
 //creation page for creating a message.
 
 ?>
-<div class="col-md-8">
+<div class="col-md-9">
   <!-- leaves six - eight cols to work with when comming to reading pvt messages -->
   <!-- below here will be the message list panel -->
   <div class="panel panel-success">
     <div class="panel-heading">
-      <h3>Mailbox</h3>
+      <h3>Mailbox:Compose Message</h3>
     </div>
     <div class="panel-body">
       <!-- code to display form below for the usermessage below -->
@@ -22,8 +22,8 @@
           <input type="text" name="messageSubject" value="" class="form-control">
         </div>
         <div class="form-group">
-          <label for="messageBody">The body of the message: </label>
-          <textarea name="messageBody" rows="7" cols="80" maxlength="1000"></textarea>
+          <label for="messageBody">The body of the message: </label><br />
+          <textarea name="messageBody" rows="4" cols="40" maxlength="1000"></textarea>
         </div>
         <div id="hiddenfields">
           <input type="hidden" name="messageSender" value="<?php $_SESSION['personID'] ?>">
