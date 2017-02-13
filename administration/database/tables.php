@@ -51,6 +51,7 @@
       postHelp INT DEFAULT 0,
       postNeg INT DEFAULT 0,
       postCommentCNT INT DEFAULT 0,
+      postAuthor VARCHAR(35),
       PRIMARY KEY (postID),
       FOREIGN KEY (userID) REFERENCES Users(userID),
       INDEX postID_Indx (postID),
