@@ -1,6 +1,9 @@
 <?php
   include_once("../model/database.php");
   include_once("../model/Users.php");
+  include_once("../model/Admin.php");
+  include_once("../model/MailMessages.php");
+  include_once("../model/Posts.php");
 
   //temp include the tables.php from the installer to test some functions...
   //include_once("../administration/database/tables.php");
@@ -16,13 +19,8 @@
   // //user_showDashboard();
  ?>
 
- <!DOCTYPE html>
- <html>
-   <head>
-     <meta charset="utf-8">
-     <title>debug.php</title>
-   </head>
-   <body>
+ <?php include("../partial/_head.php"); ?>
+
      
-   </body>
- </html>
+
+<?php include("../partial/_pageend.php"); ?>
