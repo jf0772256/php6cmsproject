@@ -19,7 +19,10 @@
       <form method="post">
         <!-- probably be more code in here later -->
         <div class="form-group">
-          <input type="submit" name="demoBtn2" value="button" class="btn btn-success btn-block">
+          <input type="submit" name="demobtn5" value="Reply" class="btn btn-success">
+          <input type="submit" name="demoBtn2" value="Mark Read/Unread" class="btn btn-success">
+          <input type="submit" name="demobtn3" value="Delete Message" class="btn btn-danger">
+          <input type="submit" name="demobtn4" value="Mark Spam" class="btn btn-danger">
         </div>
       </form>
     </div>
