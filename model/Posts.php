@@ -20,9 +20,9 @@ function set_new_post(){
     var_dump($stmnt->error);
   }else{
     echo "<p class='alert alert-success'>The Post was successfully created.</p>";
-    $pCount = $_SESSION["PostCount"];
-    $query = "UPDATE users SET posts = $pCount + 1 WHERE userID = $PosterID";
-    $_SESSION["PostCount"] = ($pCount +1);
+    // $pCount = $_SESSION["PostCount"];                                            ///This is trouble code
+    // $query = "UPDATE users SET posts = $pCount + 1 WHERE userID = $PosterID";    ///
+    // $_SESSION["PostCount"] = ($pCount +1);                                       ///
     //updates post count
     $query = "UPDATE users SET Posts = $_SESSION[PostCount]";
     $stmnt = $db -> prepare($query);
