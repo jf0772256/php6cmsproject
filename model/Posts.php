@@ -2,7 +2,7 @@
 /// posts model
 ///to be CRUD :)
 function set_new_post(){
-  global $db;
+  global $db, $dashboard_message;
   //setting the creation of a new post.
   $pTitle = filter_input(INPUT_POST,'postTitle',FILTER_DEFAULT);
   $pSlug = filter_input(INPUT_POST,'postSlug',FILTER_DEFAULT);
@@ -15,10 +15,9 @@ function set_new_post(){
   $stmnt -> bind_param("issss",$PosterID,$pTitle,$pSlug,$pBody,$pAuthor);
   $result = $stmnt -> execute();
   if(!$result){
-    echo "<p class='alert alert-danger'>The Post didnt get created successfully.</p>";
-    var_dump($stmnt->error);
+    $dashboard_message = "<p class='alert alert-danger'>The Post didnt get created successfully. $stmnt->error</p>";
   }else{
-    echo "<p class='alert alert-success'>The Post was successfully created.</p>";
+    $dashboard_message = "<p class='alert alert-success'>The Post was successfully created.</p>";
     $pCount = $_SESSION["PostCount"];
     $query = "UPDATE users SET posts = $pCount + 1 WHERE userID = $PosterID";
     $_SESSION["PostCount"] = ($pCount +1);
