@@ -23,12 +23,39 @@ function set_new_post(){
     // $pCount = $_SESSION["PostCount"];                                            ///This is trouble code
     // $query = "UPDATE users SET posts = $pCount + 1 WHERE userID = $PosterID";    ///
     // $_SESSION["PostCount"] = ($pCount +1);                                       ///
-    //updates post count
-    $query = "UPDATE users SET Posts = $_SESSION[PostCount]";
-    $stmnt = $db -> prepare($query);
-    $stmnt -> execute();
+    //updates post count                                                            ///
+    // $query = "UPDATE users SET Posts = $_SESSION[PostCount]";                    ///
+    // $stmnt = $db -> prepare($query);                                             ///
+    // $stmnt -> execute();                                                         ///
   }
 }
+
+function get_post_count($user){
+  global $db;
+  $query = "SELECT Posts FROM Users WHERE userID = ?"; //query string
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param("i",$user);
+  if (!$stmnt->execute()){
+    echo var_dump($stmnt->error);
+  }else{
+    $result = $stmnt -> get_result();
+    $data = $result -> fetch_assoc();
+    return $data["Posts"];
+  }
+}
+
+function set_post_count($user){
+  global $db;
+  $pcount = get_post_count($user);
+  $query = "UPDATE Posts SET Posts = $pcount WHERE userID = ?";
+  $stmnt = $db -> prepare($query);
+  if(!$stmnt -> execute()){
+    echo var_dump($stmnt->error);
+  }else{
+    $_SESSION["PostCount"] = $pcount;
+  }
+}
+
 function get_all_posts(){
   //get all values
   global $db;
