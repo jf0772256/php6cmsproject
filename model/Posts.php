@@ -34,7 +34,8 @@ function get_post_count($user){
   }else{
     $result = $stmnt -> get_result();
     $data = $result -> fetch_assoc();
-    return $data["Posts"];
+    echo var_dump($data);
+    //return $data["Posts"];
   }
 }
 
