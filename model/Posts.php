@@ -9,6 +9,8 @@ function set_new_post(){
   $pBody = filter_input(INPUT_POST,'postBody',FILTER_DEFAULT);
   $PosterID = $_SESSION["personID"];
 
+  echo var_dump($_SESSION); //should print out the whole session array
+
   // $query = "INSERT INTO posts (userID , postTitle , postSlug , postBody) VALUES (? , ? , ? , ? )";
   // $stmnt = $db -> prepare($query);
   // $stmnt -> bind_param("isss",$PosterID,$pTitle,$pSlug,$pBody);
