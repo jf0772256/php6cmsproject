@@ -35,7 +35,7 @@ function new_messagepost(){
   global $db, $dashboard_message;
   //sends PM to server to be retrieved, this is for new mailposts and replies.
   $messageSubject = $_POST["messageSubject"];
-  $messageSender = $_POST["messageSender"];
+  $messageSender = $_SESSION['personID'];
   $messageRecipent = $_POST["mailListContct"];
   $messageBody = $_POST["messageBody"];
 
@@ -49,7 +49,6 @@ function new_messagepost(){
   )";
 
   $stmnt = $db -> prepare($query);
-  echo var_dump($stmnt->error);
   $stmnt -> bind_param("iiss", $messageSender, $messageRecipent, $messageSubject, $messageBody);
   if (!$stmnt->execute()){
     echo var_dump($stmnt->error);

@@ -26,7 +26,6 @@
           <textarea name="messageBody" rows="4" cols="40" maxlength="1000"></textarea>
         </div>
         <div id="hiddenfields">
-          <input type="hidden" name="messageSender" value="<?php $_SESSION['personID'] ?>">
           <input type="hidden" name="messageReadFlag" value="0"> <!-- sets default flag. -->
           <input type="hidden" name="messageSpamFlag" value="0"> <!-- sets default flag. -->
         </div>
