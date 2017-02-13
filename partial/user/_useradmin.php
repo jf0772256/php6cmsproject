@@ -127,8 +127,12 @@
         }elseif (isset($_POST["writeMessages"])){
           //function to create a new message
           //there willl more code for this feature later
-
           include("partial/user/_new_message.php");
+
+        }elseif (isset($_POST["sendMessage"])){
+          //function to create a new message
+          new_messagepost();
+          include("partial/user/_dashboard.php");
 
         }elseif (sizeof($_POST)>0){
           //catch all for the unused modules.

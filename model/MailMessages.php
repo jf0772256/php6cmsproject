@@ -32,7 +32,7 @@ function get_emailList($user){
   //gets a list of PMs from server and returns them based on recip userID
 }
 function new_messagepost(){
-  global $db;
+  global $db, $dashboard_message;
   //sends PM to server to be retrieved, this is for new mailposts and replies.
   $messageSubject = $_POST["messageSubject"];
   $messageSender = $_POST["messageSender"];
@@ -53,7 +53,14 @@ function new_messagepost(){
   $stmnt -> bind_param("iiss", $messageSender, $messageRecipent, $messageSubject, $messageBody);
   if (!$stmnt->execute()){
     echo var_dump($stmnt->error);
+  }else{
+    $dashboard_message = "<p class='alert alert-success'>Message sent!</p>";
   }
-  
+}
+function get_email_from_list(){
+  global $db;
+  //This should be where we , when a user clicks on a message link it sends the message ID or something we can search for.
+  // we then go to the database and get the users PMs and filter through them to get the desired message and then display it.
+  // this is not ready yet to be deployed.
 }
 ?>
