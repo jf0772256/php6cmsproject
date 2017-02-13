@@ -9,6 +9,8 @@ function set_new_post(){
   $pBody = filter_input(INPUT_POST,'postBody',FILTER_DEFAULT);
   $PosterID = $_SESSION["personID"];
 
+  //echo var_dump($_SESSION); //should print out the whole session array
+
   $query = "INSERT INTO posts (userID , postTitle , postSlug , postBody) VALUES (? , ? , ? , ? )";
   $stmnt = $db -> prepare($query);
   $stmnt -> bind_param("isss",$PosterID,$pTitle,$pSlug,$pBody);
@@ -18,15 +20,45 @@ function set_new_post(){
     var_dump($stmnt->error);
   }else{
     echo "<p class='alert alert-success'>The Post was successfully created.</p>";
-    $pCount = $_SESSION["PostCount"];
-    $query = "UPDATE users SET posts = $pCount + 1 WHERE userID = $PosterID";
-    $_SESSION["PostCount"] = ($pCount +1);
-    //updates post count
-    $query = "UPDATE users SET Posts = $_SESSION[PostCount]";
-    $stmnt = $db -> prepare($query);
-    $stmnt -> execute();
+    set_post_count($_SESSION["personID"]);
   }
 }
+
+function get_post_count($user){
+  global $db;
+  $query = "SELECT Posts FROM Users WHERE userID = ?"; //query string
+  $stmnt = $db -> prepare($query);
+  if (!$stmnt) {
+    echo var_dump($stmnt->error);
+  }
+  $stmnt -> bind_param("i",$user);
+  if (!$stmnt->execute()){
+    echo var_dump($stmnt->error);
+  }else{
+    $result = $stmnt -> get_result();
+    $data = $result -> fetch_assoc();
+    //echo var_dump($data);
+    return $data["Posts"];
+  }
+}
+
+function set_post_count($user){
+  global $db;
+  $pcount = get_post_count($user);
+  $query = "UPDATE Users SET Posts = $pcount + 1 WHERE userID = ?";
+  $stmnt = $db -> prepare($query);
+  if (!$stmnt) {
+    echo var_dump($db->error);
+  }
+  $stmnt -> bind_param("i",$user);
+  if(!$stmnt->execute()){
+    echo var_dump($stmnt->error);
+  }else{
+    $pcount = get_post_count($user);
+    $_SESSION["PostCount"] = $pcount;
+  }
+}
+
 function get_all_posts(){
   //get all values
   global $db;
