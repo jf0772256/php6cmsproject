@@ -14,8 +14,8 @@ function check_new_messages($user){
   $stmnt -> bind_param("i", $user);
 
   if(!$stmnt -> execute()){
-    //$dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
-    echo var_dump($stmnt->error);
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+    //echo var_dump($stmnt->error);
   }
   $result = $stmnt -> get_result();
   while ($data = $result->fetch_assoc()){
@@ -27,8 +27,19 @@ function check_new_messages($user){
 }
 
 function get_emailList($user){
-  global $db;
+  global $db, $dashboard_message;
   //gets a list of PMs from server and returns them based on recip userID
+  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ?";
+  $stmnt = $db -> prepare($query);
+  $stmnt->bind_param("i",$user);
+  if (!$stmnt->execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+  $result = $stmnt -> get_result();
+  while ($data = $result->fetch_assoc()){
+    $message_Data[] = $data;
+  }
+  return $message_Data;
 }
 
 function new_messagepost(){
@@ -57,10 +68,12 @@ function new_messagepost(){
   }
 }
 
-function get_email_from_list(){
+function get_email_from_list($mID){
   global $db;
-  //This should be where we , when a user clicks on a message link it sends the message ID or something we can search for.
-  // we then go to the database and get the users PMs and filter through them to get the desired message and then display it.
-  // this is not ready yet to be deployed.
+  //this will receive a message ID, from the button in mail list, and then will pull down the message from
+  // the servere and store it in the session array being built for it. This will then display in the read message window.
+  //creating message array, which will hold all the messages with in it.
+  $_SESSION["currentmessage"] = array();
+  // next we would need to build the query that would gather all the data about the message and store it in teh Session var.
 }
 ?>

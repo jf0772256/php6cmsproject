@@ -68,7 +68,7 @@ function add_user(){
 
   @ $query = "INSERT INTO users
     (
-      Username , Password , pwsecret , emailAddress , Fname , Lname , Joined_Date , HelpVotes , NegVotes , Posts, WarnCnt 
+      Username , Password , pwsecret , emailAddress , Fname , Lname , Joined_Date , HelpVotes , NegVotes , Posts, WarnCnt
     )
     VALUES
     (
@@ -95,7 +95,7 @@ function add_user(){
   }else{
     //the following should add a newly generated user to the roles table.
     $select="(SELECT userID FROM users WHERE Username = ?)"; //sub query to return a user ID
-    $insert="INSERT INTO roles (userID , isAdmin , isMod , isFormerStaff , isUser , isBanned) VALUES (? , 0 , 0 , 0 , 1 , 0);"; //insert query to add user to roles table
+    $insert="INSERT INTO roles (userID , isAdmin , isMod , isFormerStaff , isUser , isBanned) VALUES (? , 0 , 0 , 0 , 1 , 0)"; //insert query to add user to roles table
     //I tested this code in mysql phpmyAdmin and it worked with out error...
     $stmnt = $db -> prepare($select);
     @ $stmnt -> bind_param("s",$uName);
