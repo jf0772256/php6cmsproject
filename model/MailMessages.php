@@ -23,7 +23,7 @@ function check_new_messages($user){
   }
 
   $test1 = (int)($count_Data[0]['NewMessages']);
-  return $test;
+  return $test1;
 }
 
 function get_emailList($user){
