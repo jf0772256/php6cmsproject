@@ -43,7 +43,8 @@
           <div class="row">
             <div class="col-xs-12">
               <div class="form-group">
-                <input type="submit" name="readMessages" value="Read Messages" class="btn btn-primary btn-block">
+                <!-- <input type="submit" name="readMessages" value="Read Messages" class="btn btn-primary btn-block"> -->
+                <button type="submit" name="readMessages" class="btn btn-primary btn-block">Read Messages <span class="badge"><?php check_new_messages($_SESSION["personID"]); ?></span></button>
               </div>
             </div>
           </div>

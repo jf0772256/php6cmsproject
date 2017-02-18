@@ -19,7 +19,7 @@
   // //user_showDashboard();
  ?>
 
- <?php include("../partial/_head.php"); ?>
+<?php include("../partial/_head.php"); ?>
 
      
 

@@ -68,11 +68,11 @@ function add_user(){
 
   @ $query = "INSERT INTO users
     (
-      Username , Password , pwsecret , emailAddress , Fname , Lname , Joined_Date
+      Username , Password , pwsecret , emailAddress , Fname , Lname , Joined_Date , HelpVotes , NegVotes , Posts, WarnCnt 
     )
     VALUES
     (
-      ? , ?, ? , ? , ? , ?, CURRENT_TIMESTAMP
+      ? , ?, ? , ? , ? , ?, CURRENT_TIMESTAMP,0,0,0,0
     )";
 
     $stmnt = $db -> prepare($query);
