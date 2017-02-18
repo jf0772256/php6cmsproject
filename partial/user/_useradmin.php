@@ -124,9 +124,47 @@
           include("partial/user/_message_list.php");
           include("partial/user/_read_message.php");
 
-        }elseif (isset($_POST["writeMessages"])){
+        }elseif (isset($_POST["messageRdme"])){
+          //function to read messages posted from other users...
+          $messagengerID = $_POST["msgID"];
+          //togglereadflag($messagengerID);
+          get_email_from_list($messagengerID);
+          //ill be a function... but want to show the actions;
+          include("partial/user/_message_list.php");
+          include("partial/user/_read_message.php");
+
+        }
+        elseif (isset($_POST["replymsg"])){
+          include("partial/user/_new_message.php");
+          $_POST=array();
+
+        }elseif (isset($_POST["toggleread"])){
+          $messagengerID = $_POST["msgid"];
+          togglereadflag($messagengerID);
+          get_email_from_list($messagengerID);
+          $_POST=array();
+          //ill be a function... but want to show the actions;
+          include("partial/user/_message_list.php");
+          include("partial/user/_read_message.php");
+
+        }elseif (isset($_POST["togglespam"])){
+          //function to read messages posted from other users...
+          // $messagengerID = $_POST["msgID"];
+          // get_email_from_list($messagengerID);
+          // //ill be a function... but want to show the actions;
+          // include("partial/user/_message_list.php");
+          // include("partial/user/_read_message.php");
+
+        }elseif (isset($_POST["sendReplyMessage"])){
+          //function to reply to a message
+          new_messagepost();
+          include("partial/user/_dashboard.php");
+
+        }
+        elseif (isset($_POST["writeMessages"])){
           //function to create a new message
           //there willl more code for this feature later
+          unset($_SESSION["currentmessage"]);
           include("partial/user/_new_message.php");
 
         }elseif (isset($_POST["sendMessage"])){

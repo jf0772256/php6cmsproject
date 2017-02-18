@@ -29,7 +29,7 @@ function check_new_messages($user){
 function get_emailList($user){
   global $db, $dashboard_message;
   //gets a list of PMs from server and returns them based on recip userID
-  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ?";
+  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? ORDER BY mailmessages.MessageTimeSent DESC";
   $stmnt = $db -> prepare($query);
   $stmnt->bind_param("i",$user);
   if (!$stmnt->execute()){
@@ -47,7 +47,12 @@ function new_messagepost(){
   //sends PM to server to be retrieved, this is for new mailposts and replies.
   $messageSubject = $_POST["messageSubject"];
   $messageSender = $_SESSION['personID'];
-  $messageRecipent = $_POST["mailListContct"];
+  if (!isset($_SESSION["currentmessage"])){
+    $messageRecipent = $_POST["mailListContct"];
+  }else{
+    $messageRecipent = $_SESSION["currentmessage"]["messagesender"];
+    unset($_SESSION["currentmessage"]);
+  }
   $messageBody = $_POST["messageBody"];
 
   $query = "INSERT INTO mailmessages
@@ -75,5 +80,85 @@ function get_email_from_list($mID){
   //creating message array, which will hold all the messages with in it.
   $_SESSION["currentmessage"] = array();
   // next we would need to build the query that would gather all the data about the message and store it in teh Session var.
+  $query = "SELECT * FROM mailmessages WHERE messageid = ?";
+  $query2 = "SELECT Username FROM users WHERE userID = ?";
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param('i',$mID);
+  if (!$stmnt ->execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+  $results = $stmnt -> get_result();
+  $data = $results->fetch_assoc(); // there can only be one reply.
+  //set to session array
+  $_SESSION['currentmessage']["messagenumber"] = $data['MessageId'];
+  $_SESSION['currentmessage']["messagesender"] = $data['MessageSender'];
+  $_SESSION['currentmessage']["messagereciver"] = $data['MessageRecipent'];
+  $_SESSION['currentmessage']["messagetime"] = $data['MessageTimeSent'];
+  $_SESSION['currentmessage']["messageisread"] = $data['MessageReadFlag'];
+  $_SESSION['currentmessage']["messageisspam"] = $data['MessageSpamFlag'];
+  $_SESSION['currentmessage']["messagesubject"] = $data['MessageSubject'];
+  $_SESSION['currentmessage']["messagebody"] = $data['MessageBody'];
+  //get the user name of the sender.
+  $senderID = $_SESSION['currentmessage']['messagesender'];
+  $stmnt = $db -> prepare($query2);
+  $stmnt -> bind_param('i',$senderID);
+  if (!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+  $result = $stmnt ->get_result();
+  $data = $result -> fetch_assoc();
+  $_SESSION['currentmessage']['messagesenderUN'] = $data['Username'];
+}
+
+function togglereadflag($mID){
+  global $db, $dashboard_message;
+  //flip bit if is read is 0 make it 1, else make it 0
+  if ($_SESSION['currentmessage']['messageisread'] === 0){
+    $query = "UPDATE mailmessages SET MessageReadFlag = 1 WHERE MessageId = ?";
+  }else{
+    $query = "UPDATE mailmessages SET MessageReadFlag = 0 WHERE MessageId = ?";
+  }
+
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param("i",$mID);
+  if (!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+  getReadStatus($mID);
+}
+
+function togglespamflag($mID){
+  global $db, $dashboard_message;
+  //flip bit if is read is 0 make it 1, else make it 0
+  if ($_SESSION['currentmessage']['messageisspam'] === 0){
+    $query = "UPDATE mailmessages SET MessageSpamFlag = 1 WHERE MessageId = ?";
+  }else{
+    $query = "UPDATE mailmessages SET MessageSpamFlag = 0 WHERE MessageId = ?";
+  }
+
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param("i",$mID);
+  if (!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+}
+
+function toggledelete($mID){}
+
+function replyMessage(){}
+
+function getReadStatus($mID){
+  global $db, $dashboard_message;
+  $query = "SELECT MessageReadFlag FROM mailmessages WHERE MessageId = ?";
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param("i",$mID);
+  $stmnt -> execute();
+  $result = $stmnt ->get_result();
+  $data = $result -> fetch_assoc();
+  $_SESSION["currentmessage"]["messageisread"] = $data["MessageReadFlag"];
+  error_reporting(0);
+  $page = $_SERVER['index.php'];
+  echo '<meta http-equiv="Refresh" content="0;' . $page . '">';
+  error_reporting(E_ALL);
 }
 ?>
