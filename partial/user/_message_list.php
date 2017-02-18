@@ -11,30 +11,24 @@
     <div class="panel-body">
       <!-- code to display list below -->
       <!-- for now just a dummy text -->
-      <section>
-        <span style="font-weight:bold;">Subject</span><br /><span>Sender</span>
-      </section>
-      <hr />
-      <section>
-        <span style="font-weight:bold;">Subject</span><br /><span>Sender</span>
-      </section>
-      <hr />
-      <section>
-        <span style="font-weight:bold;">Subject</span><br /><span>Sender</span>
-      </section>
-      <hr />
-      <section>
-        <span style="font-weight:bold;">Subject</span><br /><span>Sender</span>
-      </section>
-      <hr />
-      <section>
-        <span style="font-weight:bold;">Subject</span><br /><span>Sender</span>
-      </section>
-      <hr />
-      <section>
-        <span style="font-weight:bold;">Subject</span><br /><span>Sender</span>
-      </section>
-      <hr />
+      <?php
+      //if (isset($_SESSION["currentmessage"])) {unset($_SESSION["currentmessage"]);}
+      $messageArray = array();
+      $messageArray = get_emailList($_SESSION['personID']);
+      //echo var_dump($messageArray);
+      foreach ($messageArray as $key => $value) {
+        $msgSub = $messageArray[$key]['messageSubject'];
+        $msgSndr = $messageArray[$key]['Username'];
+        $mid = $messageArray[$key]['messageid'];
+        echo "<form method='post'>";
+        echo "<input type='hidden' name='msgID' value='$mid' />";
+        echo "<div class='list-group'>";
+        echo "<button type='submit' name='messageRdme' class='list-group-item'>";
+        echo "<h4 class='list-group-item-heading'>Subject: $msgSub</h4>";
+        echo "<h5 class='list-group-item-text'>From: $msgSndr</h5>";
+        echo "</button></div></form>";
+      }
+      ?>
     </div>
   </div>
 </div>

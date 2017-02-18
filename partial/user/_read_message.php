@@ -1,5 +1,6 @@
 <?php
   // displays a list of messages, and allows you to read, them.
+  error_reporting(0);
 ?>
 <div class="col-md-7">
   <!-- leaves six - eight cols to work with when comming to reading pvt messages -->
@@ -9,20 +10,35 @@
       <h3>Mailbox: Read Messages</h3>
     </div>
     <div class="panel-body">
-      <!-- code to display form below for the usermessage below -->
-      <!-- for now just a dummy text -->
-      <p>Dear Jane Doe,</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-      <p>Salute!</p>
-      <p>John Smith</p>
+      <?php
+      $sub = $_SESSION['currentmessage']['messagesubject'];
+      $from = $_SESSION['currentmessage']['messagesenderUN'];
+      $tme = $_SESSION['currentmessage']['messagetime'];
+      echo "<h4>Subject: $sub</h4>";
+      echo "<p>From: $from</p>";
+      echo "<p>Time Received: $tme</p>";
+      echo "<hr />";
+      echo $_SESSION['currentmessage']['messagebody'];
+      echo "<hr /><br />";
+      ?>
       <form method="post">
         <!-- probably be more code in here later -->
+        <?php
+          $sID = $_SESSION['currentmessage']['messagesender'];
+          $isread = $_SESSION['currentmessage']['messageisread'];
+          $isspam = $_SESSION['currentmessage']['messageisspam'];
+          $msgid = $_SESSION['currentmessage']['messagenumber'];
+
+          echo "<input type='hidden' name='senderid' value='$sID' />";
+          echo "<input type='hidden' name='messageread' value='$isread' />";
+          echo "<input type='hidden' name='messagespam' value='$isspam' />";
+          echo "<input type='hidden' name='msgid' value='$msgid' />";
+        ?>
         <div class="form-group">
-          <input type="submit" name="demobtn5" value="Reply" class="btn btn-success">
-          <input type="submit" name="demoBtn2" value="Mark Read/Unread" class="btn btn-success">
-          <input type="submit" name="demobtn3" value="Delete Message" class="btn btn-danger">
-          <input type="submit" name="demobtn4" value="Mark Spam" class="btn btn-danger">
+          <input type="submit" name="replymsg" value="Reply" class="btn btn-success">
+          <input type="submit" name="toggleread" value="Mark Read/Unread" class="btn btn-success">
+          <input type="submit" name="toggledel" value="Delete Message" class="btn btn-danger">
+          <input type="submit" name="togglespam" value="Mark Spam" class="btn btn-danger">
         </div>
       </form>
     </div>

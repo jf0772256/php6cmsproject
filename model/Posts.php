@@ -10,7 +10,7 @@ function set_new_post(){
   $PosterID = $_SESSION["personID"];
   $pAuthor = $_SESSION["uNameSTR"];
 
-  
+
   $query = "INSERT INTO posts (userID , postTitle , postSlug , postBody , postAuthor) VALUES (? , ? , ? , ? , ?)";
   $stmnt = $db -> prepare($query);
   $stmnt -> bind_param("issss",$PosterID,$pTitle,$pSlug,$pBody,$pAuthor);

@@ -1,6 +1,10 @@
 <?php
 //creation page for creating a message.
-
+  if (isset($_SESSION["currentmessage"])) {
+    $replyMsgSubject = "RE: " . $_SESSION["currentmessage"]["messagesubject"];
+    $replyRecip = $_SESSION["currentmessage"]["messagesender"];
+    $replyrecUN = $_SESSION["currentmessage"]["messagesenderUN"];
+  }
 ?>
 <div class="col-md-9">
   <!-- leaves six - eight cols to work with when comming to reading pvt messages -->
@@ -14,12 +18,26 @@
       <!-- for now just a dummy text -->
       <form method="post">
         <div class="form-group">
-          <label for="mailListContct" class="control-label">Select a recipent: </label>
-          <?php get_all_users("mailListContct"); ?>
+          <?php
+          if (isset($_SESSION["currentmessage"])) {
+            echo "<label for='mailListContct' class='control-label'>Reply to: </label>";
+            echo " $replyrecUN";
+          }else{
+            echo "<label for='mailListContct' class='control-label'>Select a recipent: </label>";
+            get_all_users("mailListContct");
+          }
+          ?>
         </div>
         <div class="form-group">
-          <label for="messageSubject">Subject: </label>
-          <input type="text" name="messageSubject" value="" class="form-control">
+          <?php
+          if (isset($_SESSION["currentmessage"])) {
+            echo "<label for='messageSubject'>Subject: </label>";
+            echo "<input type='text' name='messageSubject' value='$replyMsgSubject' class='form-control'>";
+          }else{
+            echo "<label for='messageSubject'>Subject: </label>";
+            echo "<input type='text' name='messageSubject' value='' class='form-control'>";
+          }
+          ?>
         </div>
         <div class="form-group">
           <label for="messageBody">The body of the message: </label><br />
@@ -30,7 +48,13 @@
           <input type="hidden" name="messageSpamFlag" value="0"> <!-- sets default flag. -->
         </div>
         <div class="form-group">
-          <input type="submit" name="sendMessage" value="Send" class="btn btn-success btn-block">
+          <?php
+          if (isset($_SESSION["currentmessage"])) {
+            echo "<input type='submit' name='sendReplyMessage' value='Send Reply' class='btn btn-success btn-block'>";
+          }else{
+            echo "<input type='submit' name='sendMessage' value='Send' class='btn btn-success btn-block'>";
+          }
+          ?>
         </div>
       </form>
     </div>

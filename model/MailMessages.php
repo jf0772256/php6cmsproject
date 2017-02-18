@@ -14,29 +14,45 @@ function check_new_messages($user){
   $stmnt -> bind_param("i", $user);
 
   if(!$stmnt -> execute()){
-    //$dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
-    echo var_dump($stmnt->error);
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+    //echo var_dump($stmnt->error);
   }
   $result = $stmnt -> get_result();
   while ($data = $result->fetch_assoc()){
     $count_Data[] = $data;
   }
 
-  $value = (int)($count_Data[0]['NewMessages']);
-  // echo var_dump($value);
-  $test = (int)("4");
-  return $test;
+  $test1 = (int)($count_Data[0]['NewMessages']);
+  return $test1;
 }
+
 function get_emailList($user){
-  global $db;
+  global $db, $dashboard_message;
   //gets a list of PMs from server and returns them based on recip userID
+  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? AND MessageSpamFlag = 0 ORDER BY mailmessages.MessageTimeSent DESC";
+  $stmnt = $db -> prepare($query);
+  $stmnt->bind_param("i",$user);
+  if (!$stmnt->execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+  $result = $stmnt -> get_result();
+  while ($data = $result->fetch_assoc()){
+    $message_Data[] = $data;
+  }
+  return $message_Data;
 }
+
 function new_messagepost(){
   global $db, $dashboard_message;
   //sends PM to server to be retrieved, this is for new mailposts and replies.
   $messageSubject = $_POST["messageSubject"];
   $messageSender = $_SESSION['personID'];
-  $messageRecipent = $_POST["mailListContct"];
+  if (!isset($_SESSION["currentmessage"])){
+    $messageRecipent = $_POST["mailListContct"];
+  }else{
+    $messageRecipent = $_SESSION["currentmessage"]["messagesender"];
+    unset($_SESSION["currentmessage"]);
+  }
   $messageBody = $_POST["messageBody"];
 
   $query = "INSERT INTO mailmessages
@@ -46,7 +62,7 @@ function new_messagepost(){
   VALUES
   (
     ? , ? , ? , ? , CURRENT_TIMESTAMP
-  )"; 
+  )";
 
   $stmnt = $db -> prepare($query);
   $stmnt -> bind_param("iiss", $messageSender, $messageRecipent, $messageSubject, $messageBody);
@@ -56,10 +72,97 @@ function new_messagepost(){
     $dashboard_message = "<p class='alert alert-success'>Message sent!</p>";
   }
 }
-function get_email_from_list(){
+
+function get_email_from_list($mID){
   global $db;
-  //This should be where we , when a user clicks on a message link it sends the message ID or something we can search for.
-  // we then go to the database and get the users PMs and filter through them to get the desired message and then display it.
-  // this is not ready yet to be deployed.
+  //this will receive a message ID, from the button in mail list, and then will pull down the message from
+  // the servere and store it in the session array being built for it. This will then display in the read message window.
+  //creating message array, which will hold all the messages with in it.
+  $_SESSION["currentmessage"] = array();
+  // next we would need to build the query that would gather all the data about the message and store it in teh Session var.
+  $query = "SELECT * FROM mailmessages WHERE messageid = ? AND MessageSpamFlag = 0";
+  $query2 = "SELECT Username FROM users WHERE userID = ?";
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param('i',$mID);
+  if (!$stmnt ->execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+  $results = $stmnt -> get_result();
+  $data = $results->fetch_assoc(); // there can only be one reply.
+  //set to session array
+  $_SESSION['currentmessage']["messagenumber"] = $data['MessageId'];
+  $_SESSION['currentmessage']["messagesender"] = $data['MessageSender'];
+  $_SESSION['currentmessage']["messagereciver"] = $data['MessageRecipent'];
+  $_SESSION['currentmessage']["messagetime"] = $data['MessageTimeSent'];
+  $_SESSION['currentmessage']["messageisread"] = $data['MessageReadFlag'];
+  $_SESSION['currentmessage']["messageisspam"] = $data['MessageSpamFlag'];
+  $_SESSION['currentmessage']["messagesubject"] = $data['MessageSubject'];
+  $_SESSION['currentmessage']["messagebody"] = $data['MessageBody'];
+  //get the user name of the sender.
+  $senderID = $_SESSION['currentmessage']['messagesender'];
+  $stmnt = $db -> prepare($query2);
+  $stmnt -> bind_param('i',$senderID);
+  if (!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+  $result = $stmnt ->get_result();
+  $data = $result -> fetch_assoc();
+  $_SESSION['currentmessage']['messagesenderUN'] = $data['Username'];
+}
+
+function togglereadflag($mID){
+  global $db, $dashboard_message;
+  //flip bit if is read is 0 make it 1, else make it 0
+  if ($_SESSION['currentmessage']['messageisread'] === 0){
+    $query = "UPDATE mailmessages SET MessageReadFlag = 1 WHERE MessageId = ?";
+  }else{
+    $query = "UPDATE mailmessages SET MessageReadFlag = 0 WHERE MessageId = ?";
+  }
+
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param("i",$mID);
+  if (!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+  getReadStatus($mID);
+}
+
+function togglespamflag($mID){
+  global $db, $dashboard_message;
+  //flip bit if is read is 0 make it 1, else make it 0
+  if ($_SESSION['currentmessage']['messageisspam'] === 0){
+    $query = "UPDATE mailmessages SET MessageSpamFlag = 1, MessageReadFlag = 1 WHERE MessageId = ?";
+  }else{
+    $query = "UPDATE mailmessages SET MessageSpamFlag = 0, MessageReadFlag = 0 WHERE MessageId = ?";
+  }
+
+  $stmnt = $db -> prepare($query);
+  if (!$stmnt) {
+   echo var_dump($stmnt ->error);
+  }
+  $stmnt -> bind_param("i",$mID);
+  //if (!$stmnt) {
+  //  echo var_dump($stmnt ->error);
+  //}
+  if (!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+}
+
+function toggledelete($mID){}
+
+function getReadStatus($mID){
+  global $db, $dashboard_message;
+  $query = "SELECT MessageReadFlag FROM mailmessages WHERE MessageId = ?";
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param("i",$mID);
+  $stmnt -> execute();
+  $result = $stmnt ->get_result();
+  $data = $result -> fetch_assoc();
+  $_SESSION["currentmessage"]["messageisread"] = $data["MessageReadFlag"];
+  error_reporting(0);
+  $page = $_SERVER['index.php'];
+  echo '<meta http-equiv="Refresh" content="0;' . $page . '">';
+  error_reporting(E_ALL);
 }
 ?>
