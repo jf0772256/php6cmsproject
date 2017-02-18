@@ -2,22 +2,21 @@
 /// posts model
 ///to be CRUD :)
 function set_new_post(){
-  global $db;
+  global $db, $dashboard_message;
   //setting the creation of a new post.
   $pTitle = filter_input(INPUT_POST,'postTitle',FILTER_DEFAULT);
   $pSlug = filter_input(INPUT_POST,'postSlug',FILTER_DEFAULT);
   $pBody = filter_input(INPUT_POST,'postBody',FILTER_DEFAULT);
   $PosterID = $_SESSION["personID"];
+  $pAuthor = $_SESSION["uNameSTR"];
 
-  //echo var_dump($_SESSION); //should print out the whole session array
-
-  $query = "INSERT INTO posts (userID , postTitle , postSlug , postBody) VALUES (? , ? , ? , ? )";
+  
+  $query = "INSERT INTO posts (userID , postTitle , postSlug , postBody , postAuthor) VALUES (? , ? , ? , ? , ?)";
   $stmnt = $db -> prepare($query);
-  $stmnt -> bind_param("isss",$PosterID,$pTitle,$pSlug,$pBody);
+  $stmnt -> bind_param("issss",$PosterID,$pTitle,$pSlug,$pBody,$pAuthor);
   $result = $stmnt -> execute();
   if(!$result){
-    echo "<p class='alert alert-danger'>The Post didnt get created successfully.</p>";
-    var_dump($stmnt->error);
+    $dashboard_message = "<p class='alert alert-danger'>The Post didnt get created successfully. $stmnt->error</p>";
   }else{
     echo "<p class='alert alert-success'>The Post was successfully created.</p>";
     set_post_count($_SESSION["personID"]);
@@ -70,19 +69,19 @@ function get_all_posts(){
   while ($data = $result->fetch_assoc()){
     $all_post_Data[] = $data;
   }
-
   //now to iterate through the array and display on the posts page.
   //for ($i=0; $i < sizeof($all_post_Data); $i++) {
     //first iteration
     foreach ($all_post_Data as $key => $posts) {
       $Title = $all_post_Data[$key]["postTitle"];
       $PostBody = $all_post_Data[$key]["postBody"];
+      $Author = $all_post_Data[$key]["postAuthor"];
       $Writer = "";
       echo '<div>';
       echo '<section>';
       echo '<article>';
       echo "<h3>$Title</h3>";
-      echo "<h4></h4>";
+      echo "<h4>By: $Author</h4>";
       echo "<p>$PostBody</p>";
       echo '<form method="post">';
       echo "<input type='submit' name='dummybtn0' class='btn btn-primary' value='Read More'>";
@@ -92,5 +91,9 @@ function get_all_posts(){
       echo '</div>';
     }
   //}
+}
+
+function get_author_info(){
+  //gets the author name and returns them from the database
 }
 ?>

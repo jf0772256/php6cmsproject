@@ -19,14 +19,8 @@
   // //user_showDashboard();
  ?>
 
-<?php
-include("../partial/_head.php");
-//include("../partial/user/_options.php");
-echo var_dump($_SESSION);
-//include("../partial/user/_message_list.php");
-//include("../partial/user/_new_message.php");
-//include("../partial/user/_read_message.php");
-?>
-<?php
-include("../partial/_pageend.php");
-?>
+<?php include("../partial/_head.php"); ?>
+
+     
+
+<?php include("../partial/_pageend.php"); ?>

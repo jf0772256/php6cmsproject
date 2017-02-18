@@ -45,3 +45,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+unused/*
+unused/partial/*
+unused/partial/admin/*
+unused/partial/user/*
