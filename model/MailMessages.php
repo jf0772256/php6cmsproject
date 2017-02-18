@@ -29,6 +29,7 @@ function check_new_messages($user){
 function get_emailList($user){
   global $db, $dashboard_message;
   //gets a list of PMs from server and returns them based on recip userID
+  $message_Data=array();
   $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? AND MessageSpamFlag = 0 ORDER BY mailmessages.MessageTimeSent DESC";
   $stmnt = $db -> prepare($query);
   $stmnt->bind_param("i",$user);
@@ -150,7 +151,7 @@ function togglespamflag($mID){
 }
 
 function toggledelete($mID){
-  //here will be simular to teh other flag flippers :) 
+  //here will be simular to teh other flag flippers :)
 }
 
 function getReadStatus($mID){
