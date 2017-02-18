@@ -149,7 +149,9 @@ function togglespamflag($mID){
   }
 }
 
-function toggledelete($mID){}
+function toggledelete($mID){
+  //here will be simular to teh other flag flippers :) 
+}
 
 function getReadStatus($mID){
   global $db, $dashboard_message;
