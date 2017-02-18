@@ -29,7 +29,7 @@ function check_new_messages($user){
 function get_emailList($user){
   global $db, $dashboard_message;
   //gets a list of PMs from server and returns them based on recip userID
-  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? ORDER BY mailmessages.MessageTimeSent DESC";
+  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? AND MessageSpamFlag = 0 ORDER BY mailmessages.MessageTimeSent DESC";
   $stmnt = $db -> prepare($query);
   $stmnt->bind_param("i",$user);
   if (!$stmnt->execute()){
@@ -80,7 +80,7 @@ function get_email_from_list($mID){
   //creating message array, which will hold all the messages with in it.
   $_SESSION["currentmessage"] = array();
   // next we would need to build the query that would gather all the data about the message and store it in teh Session var.
-  $query = "SELECT * FROM mailmessages WHERE messageid = ?";
+  $query = "SELECT * FROM mailmessages WHERE messageid = ? AND MessageSpamFlag = 0";
   $query2 = "SELECT Username FROM users WHERE userID = ?";
   $stmnt = $db -> prepare($query);
   $stmnt -> bind_param('i',$mID);
@@ -131,21 +131,25 @@ function togglespamflag($mID){
   global $db, $dashboard_message;
   //flip bit if is read is 0 make it 1, else make it 0
   if ($_SESSION['currentmessage']['messageisspam'] === 0){
-    $query = "UPDATE mailmessages SET MessageSpamFlag = 1 WHERE MessageId = ?";
+    $query = "UPDATE mailmessages SET MessageSpamFlag = 1, MessageReadFlag = 1 WHERE MessageId = ?";
   }else{
-    $query = "UPDATE mailmessages SET MessageSpamFlag = 0 WHERE MessageId = ?";
+    $query = "UPDATE mailmessages SET MessageSpamFlag = 0, MessageReadFlag = 0 WHERE MessageId = ?";
   }
 
   $stmnt = $db -> prepare($query);
+  if (!$stmnt) {
+   echo var_dump($stmnt ->error);
+  }
   $stmnt -> bind_param("i",$mID);
+  //if (!$stmnt) {
+  //  echo var_dump($stmnt ->error);
+  //}
   if (!$stmnt -> execute()){
     $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
   }
 }
 
 function toggledelete($mID){}
-
-function replyMessage(){}
 
 function getReadStatus($mID){
   global $db, $dashboard_message;

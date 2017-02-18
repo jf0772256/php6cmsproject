@@ -148,12 +148,12 @@
           include("partial/user/_read_message.php");
 
         }elseif (isset($_POST["togglespam"])){
-          //function to read messages posted from other users...
-          // $messagengerID = $_POST["msgID"];
-          // get_email_from_list($messagengerID);
-          // //ill be a function... but want to show the actions;
-          // include("partial/user/_message_list.php");
-          // include("partial/user/_read_message.php");
+          $messagengerID = $_POST["msgid"];
+          togglespamflag($messagengerID);
+          $_POST=array();
+          //ill be a function... but want to show the actions;
+          include("partial/user/_message_list.php");
+          include("partial/user/_read_message.php");
 
         }elseif (isset($_POST["sendReplyMessage"])){
           //function to reply to a message

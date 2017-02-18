@@ -12,6 +12,7 @@
       <!-- code to display list below -->
       <!-- for now just a dummy text -->
       <?php
+      //if (isset($_SESSION["currentmessage"])) {unset($_SESSION["currentmessage"]);}
       $messageArray = array();
       $messageArray = get_emailList($_SESSION['personID']);
       //echo var_dump($messageArray);
