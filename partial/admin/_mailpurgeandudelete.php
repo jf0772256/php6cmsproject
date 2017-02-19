@@ -37,7 +37,13 @@
           <hr />
           <button type="submit" name="spampurge" class="btn btn-danger">Purge Spam &nbsp;&nbsp;<?php echo "<span class='badge'>$SpamCount</span>"; ?></button>
           <button type="submit" name="deletepurge" class="btn btn-danger">Purge Deleted &nbsp;&nbsp;<?php echo "<span class='badge'>$DeletCount</span>"; ?></button> &nbsp; || &nbsp;
-          <button type="submit" name="unDeletemessage" class="btn btn-primary">Undelete Seletect Message</button>
+          <?php
+            if ($DeletCount > 0){
+              echo "<button type='submit' name='unDeletemessage' class='btn btn-primary'>Undelete Seletect Message</button>";
+            }else{
+              echo "<button type='submit' name='unDeletemessage' class='btn btn-primary' disabled = 'disabled'>Undelete Seletect Message</button>";
+            }
+          ?>
         </div>
       </form>
     </div>
