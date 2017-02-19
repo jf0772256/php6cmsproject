@@ -189,4 +189,44 @@ function getReadStatus($mID){
   echo '<meta http-equiv="Refresh" content="0;' . $page . '">';
   error_reporting(E_ALL);
 }
+
+function purgeSpam(){
+  global $db, $dashboard_message;
+  //this function will purge all messages marked as spam from the database... and is not to be done lightly ...
+  //auto runs, may use JS to verify the post request before this script is run.
+  $query = "DELETE FROM mailmessages WHERE MessageSpamFlag = 1";
+  $stmnt = $db ->prepare($query);
+  if (!$stmnt -> execute()) {
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }else{
+    $dashboard_message = "<p class='alert alert-success'>The spam flagged messages have been purged sucessfully.</p>";
+  }
+}
+
+function purgeDeleted(){
+  global $db, $dashboard_message;
+  //this function will purge all messages marked for deletion from the database... and is not to be done lightly ...
+  //auto runs, may use JS to verify the post request before this script is run.
+  $query = "DELETE FROM mailmessages WHERE MessageDeleteFlag = 1";
+  $stmnt = $db ->prepare($query);
+  if (!$stmnt -> execute()) {
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }else{
+    $dashboard_message = "<p class='alert alert-success'>The deleted messages have been purged sucessfully.</p>";
+  }
+}
+
+function Undelete_Message($mid){
+  global $db, $dashboard_message;
+  //admin access to undelete message...
+  $query = "UPDATE mailmessages SET MessageDeleteFlag = 0 WHERE MessageId = ?";
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param("i",$mid);
+  if (!$stmnt -> execute()) {
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }else{
+    $dashboard_message = "<p class='alert alert-success'>The message has been undeleted.</p>";
+  }
+}
+
 ?>
