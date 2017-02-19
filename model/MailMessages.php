@@ -293,7 +293,6 @@ function get_delete_flagged_messages($selectorName = ''){
   if (sizeof($user_Data) === 0){
     $dashboard_message_users = "<p class='alert alert-success'>There are no deleted messages</p>";
   }else{
-    echo var_dump($user_Data);
     echo '<select name="'.$selectorName.'" class="form-control">';
     foreach ($user_Data as $key => $value) {
         $mNum = $user_Data[$key]['MessageId'];

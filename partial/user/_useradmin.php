@@ -164,7 +164,7 @@
           //function to create a new message
           //there willl more code for this feature later
           unset($_SESSION["currentmessage"]);
-          include("partial/user/_new_message.php"); 
+          include("partial/user/_new_message.php");
 
         }elseif (isset($_POST["sendMessage"])){
           //function to create a new message
@@ -179,6 +179,8 @@
           //toggle delete status
           toggledelete($_SESSION['currentmessage']['messagenumber']);
           $_POST=array();
+          //remove message from array... should display blank now.
+          unset($_SESSION["currentmessage"]);
           //ill be a function... but want to show the actions;
           include("partial/user/_message_list.php");
           include("partial/user/_read_message.php");
@@ -207,7 +209,11 @@
     </div>
   </div>
 </div>
-
+<!-- lorem for testing -->
+<!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,-->
+<!-- quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum -->
+<!-- dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. -->
+<!--  -->
 <?php
 //  include("partial/_pageend.php");
 ?>
