@@ -5,6 +5,10 @@
 <div class="col-md-7">
   <!-- leaves six - eight cols to work with when comming to reading pvt messages -->
   <!-- below here will be the message list panel -->
+  <?php
+    $userMessages = array();
+    $userMessages = get_emailList($_SESSION['personID']);
+    if (!empty($userMessages) || count($userMessages)>0): ?>
   <div class="panel panel-success">
     <div class="panel-heading">
       <h3>Mailbox: Read Messages</h3>
@@ -44,3 +48,4 @@
     </div>
   </div>
 </div>
+<?php endif; ?>
