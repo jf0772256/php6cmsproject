@@ -160,8 +160,7 @@
           new_messagepost();
           include("partial/user/_dashboard.php");
 
-        }
-        elseif (isset($_POST["writeMessages"])){
+        }elseif (isset($_POST["writeMessages"])){
           //function to create a new message
           //there willl more code for this feature later
           unset($_SESSION["currentmessage"]);
@@ -172,11 +171,38 @@
           new_messagepost();
           include("partial/user/_dashboard.php");
 
+        }elseif (isset($_POST['rvwDelNPurge'])) {
+          //adding action to the button
+          include("partial/admin/_mailpurgeandudelete.php");
+
+        }elseif (isset($_POST["toggledel"])) {
+          //toggle delete status
+          toggledelete($_SESSION['currentmessage']['messagenumber']);
+          $_POST=array();
+          //ill be a function... but want to show the actions;
+          include("partial/user/_message_list.php");
+          include("partial/user/_read_message.php");
+
+        }elseif (isset($_POST['spampurge'])) {
+          //permanatly deletes messages from database.
+          purgeSpam();
+          include("partial/admin/_mailpurgeandudelete.php");
+
+        }elseif (isset($_POST["deletepurge"])) {
+          //permanatly deletes messages from database.
+          purgeDeleted();
+          include("partial/admin/_mailpurgeandudelete.php");
+
+        }elseif (isset($_POST["unDeletemessage"])) {
+          //the undelete option!
+          $Mnum = $_POST["DelMsgList"];
+          Undelete_Message($Mnum);
+          include("partial/admin/_mailpurgeandudelete.php");
         }elseif (sizeof($_POST)>0){
           //catch all for the unused modules.
           $_POST = array();
           include("partial/user/_featNotAvail.php");
-        }
+        }else{$_POST=array();}
       ?>
     </div>
   </div>

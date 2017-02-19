@@ -16,17 +16,21 @@
       $messageArray = array();
       $messageArray = get_emailList($_SESSION['personID']);
       //echo var_dump($messageArray);
-      foreach ($messageArray as $key => $value) {
-        $msgSub = $messageArray[$key]['messageSubject'];
-        $msgSndr = $messageArray[$key]['Username'];
-        $mid = $messageArray[$key]['messageid'];
-        echo "<form method='post'>";
-        echo "<input type='hidden' name='msgID' value='$mid' />";
-        echo "<div class='list-group'>";
-        echo "<button type='submit' name='messageRdme' class='list-group-item'>";
-        echo "<h4 class='list-group-item-heading'>Subject: $msgSub</h4>";
-        echo "<h5 class='list-group-item-text'>From: $msgSndr</h5>";
-        echo "</button></div></form>";
+      if (!empty($messageArray)) {
+        foreach ($messageArray as $key => $value) {
+          $msgSub = $messageArray[$key]['messageSubject'];
+          $msgSndr = $messageArray[$key]['Username'];
+          $mid = $messageArray[$key]['messageid'];
+          echo "<form method='post'>";
+          echo "<input type='hidden' name='msgID' value='$mid' />";
+          echo "<div class='list-group'>";
+          echo "<button type='submit' name='messageRdme' class='list-group-item'>";
+          echo "<h5 class='list-group-item-heading' style='font-weight:bold;'>Subject: $msgSub</h5>";
+          echo "<h5 class='list-group-item-text'>From: $msgSndr</h5>";
+          echo "</button></div></form>";
+        }
+      }else{
+        echo "You do not have any messages yet.";
       }
       ?>
     </div>

@@ -6,7 +6,7 @@ function check_new_messages($user){
   //requires user id to get from server the PM assigned to a specific user.
   global $db, $dashboard_message;
   $count_Data=array();
-  $query = "SELECT COUNT(MessageRecipent) AS NewMessages FROM mailmessages WHERE MessageRecipent = ? AND MessageReadFlag = 0";
+  $query = "SELECT COUNT(MessageRecipent) AS NewMessages FROM mailmessages WHERE MessageRecipent = ? AND MessageReadFlag = 0 AND MessageSpamFlag = 0 AND MessageDeleteFlag = 0";
   $stmnt = $db -> prepare($query);
   if(!$stmnt){
    echo var_dump($stmnt);
@@ -29,7 +29,8 @@ function check_new_messages($user){
 function get_emailList($user){
   global $db, $dashboard_message;
   //gets a list of PMs from server and returns them based on recip userID
-  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? AND MessageSpamFlag = 0 ORDER BY mailmessages.MessageTimeSent DESC";
+  $message_Data=array();
+  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? AND MessageSpamFlag = 0 AND MessageDeleteFlag = 0 ORDER BY mailmessages.MessageTimeSent DESC";
   $stmnt = $db -> prepare($query);
   $stmnt->bind_param("i",$user);
   if (!$stmnt->execute()){
@@ -80,7 +81,7 @@ function get_email_from_list($mID){
   //creating message array, which will hold all the messages with in it.
   $_SESSION["currentmessage"] = array();
   // next we would need to build the query that would gather all the data about the message and store it in teh Session var.
-  $query = "SELECT * FROM mailmessages WHERE messageid = ? AND MessageSpamFlag = 0";
+  $query = "SELECT * FROM mailmessages WHERE messageid = ? AND MessageSpamFlag = 0 AND MessageDeleteFlag = 0";
   $query2 = "SELECT Username FROM users WHERE userID = ?";
   $stmnt = $db -> prepare($query);
   $stmnt -> bind_param('i',$mID);
@@ -96,6 +97,7 @@ function get_email_from_list($mID){
   $_SESSION['currentmessage']["messagetime"] = $data['MessageTimeSent'];
   $_SESSION['currentmessage']["messageisread"] = $data['MessageReadFlag'];
   $_SESSION['currentmessage']["messageisspam"] = $data['MessageSpamFlag'];
+  $_SESSION['currentmessage']["messagedeleted"] = $data['MessageDeleteFlag'];
   $_SESSION['currentmessage']["messagesubject"] = $data['MessageSubject'];
   $_SESSION['currentmessage']["messagebody"] = $data['MessageBody'];
   //get the user name of the sender.
@@ -149,7 +151,29 @@ function togglespamflag($mID){
   }
 }
 
-function toggledelete($mID){}
+function toggledelete($mID){
+  //here will be simular to the other flag flippers :)
+  //delete is special as it requires Admin or staff privlages to undelete a message.
+
+  global $db, $dashboard_message;
+  //flip bit if is read is 0 make it 1, else make it 0
+  if ($_SESSION['currentmessage']['messageisspam'] === 0){
+    $query = "UPDATE mailmessages SET MessageDeleteFlag = 1, MessageReadFlag = 1 WHERE MessageId = ?";
+  }else{
+    $dashboard_message = "<p class='alert alert-danger'>The db query could not be created.</p>";
+  }
+  $stmnt = $db -> prepare($query);
+  if (!$stmnt) {
+   echo var_dump($stmnt ->error);
+  }
+  $stmnt -> bind_param("i",$mID);
+  //if (!$stmnt) {
+  //  echo var_dump($stmnt ->error);
+  //}
+  if (!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+}
 
 function getReadStatus($mID){
   global $db, $dashboard_message;
@@ -164,5 +188,119 @@ function getReadStatus($mID){
   $page = $_SERVER['index.php'];
   echo '<meta http-equiv="Refresh" content="0;' . $page . '">';
   error_reporting(E_ALL);
+}
+
+function purgeSpam(){
+  global $db, $dashboard_message;
+  //this function will purge all messages marked as spam from the database... and is not to be done lightly ...
+  //auto runs, may use JS to verify the post request before this script is run.
+  $query = "DELETE FROM mailmessages WHERE MessageSpamFlag = 1";
+  $stmnt = $db ->prepare($query);
+  if (!$stmnt -> execute()) {
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }else{
+    $dashboard_message = "<p class='alert alert-success'>The spam flagged messages have been purged sucessfully.</p>";
+  }
+}
+
+function purgeDeleted(){
+  global $db, $dashboard_message;
+  //this function will purge all messages marked for deletion from the database... and is not to be done lightly ...
+  //auto runs, may use JS to verify the post request before this script is run.
+  $query = "DELETE FROM mailmessages WHERE MessageDeleteFlag = 1";
+  $stmnt = $db ->prepare($query);
+  if (!$stmnt -> execute()) {
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }else{
+    $dashboard_message = "<p class='alert alert-success'>The deleted messages have been purged sucessfully.</p>";
+  }
+}
+
+function Undelete_Message($mid){
+  global $db, $dashboard_message;
+  //admin access to undelete message...
+  $query = "UPDATE mailmessages SET MessageDeleteFlag = 0 WHERE MessageId = ?";
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param("i",$mid);
+  if (!$stmnt -> execute()) {
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }else{
+    $dashboard_message = "<p class='alert alert-success'>The message has been undeleted.</p>";
+  }
+}
+
+function get_deleted_messages_count(){
+  //gets a count to return and to be used as a badge value
+  global $db, $dashboard_message;
+  $count_Data=array();
+  $query = "SELECT COUNT(MessageRecipent) AS DeletedMessages FROM mailmessages WHERE MessageDeleteFlag = 1";
+  $stmnt = $db -> prepare($query);
+
+  if(!$stmnt){
+   echo var_dump($stmnt);
+  }
+
+  if(!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+    //echo var_dump($stmnt->error);
+  }
+  $result = $stmnt -> get_result();
+  while ($data = $result->fetch_assoc()){
+    $count_Data[] = $data;
+  }
+
+  $retVal = (int)($count_Data[0]['DeletedMessages']);
+  return $retVal;
+}
+
+function get_spam_messages_count(){
+  //gets a count to return and to be used as a badge value
+  global $db, $dashboard_message;
+  $count_Data=array();
+  $query = "SELECT COUNT(MessageRecipent) AS SpamMessages FROM mailmessages WHERE MessageSpamFlag = 1";
+  $stmnt = $db -> prepare($query);
+  if(!$stmnt){
+   echo var_dump($stmnt);
+  }
+
+  if(!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+    //echo var_dump($stmnt->error);
+  }
+
+  $result = $stmnt -> get_result();
+
+  while ($data = $result->fetch_assoc()){
+    $count_Data[] = $data;
+  }
+
+  $retVal = (int)($count_Data[0]['SpamMessages']);
+  return $retVal;
+}
+
+function get_delete_flagged_messages($selectorName = ''){
+  //gets a list of all messages that are in the database. and echos them to a form select
+  global $db,$dashboard_message_users;
+  $user_Data=array();
+  $query ="SELECT mailmessages.MessageId, mailmessages.messageSubject FROM mailmessages WHERE mailmessages.MessageDeleteFlag = 1";
+  $stmnt = $db -> prepare($query);
+  $stmnt -> execute();
+  $results = $stmnt -> get_result();
+  while ($data = $results->fetch_assoc()){
+    $user_Data[] = $data;
+  }
+
+  if (sizeof($user_Data) === 0){
+    $dashboard_message_users = "<p class='alert alert-success'>There are no deleted messages</p>";
+  }else{
+    echo var_dump($user_Data);
+    echo '<select name="'.$selectorName.'" class="form-control">';
+    foreach ($user_Data as $key => $value) {
+        $mNum = $user_Data[$key]['MessageId'];
+        $mSub = $user_Data[$key]['messageSubject'];
+        echo "<option value='$mNum'>$mSub</option>";
+    }
+    echo "</select>";
+  }
 }
 ?>
