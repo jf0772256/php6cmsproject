@@ -81,7 +81,7 @@ function get_email_from_list($mID){
   //creating message array, which will hold all the messages with in it.
   $_SESSION["currentmessage"] = array();
   // next we would need to build the query that would gather all the data about the message and store it in teh Session var.
-  $query = "SELECT * FROM mailmessages WHERE messageid = ? AND MessageSpamFlag = 0";
+  $query = "SELECT * FROM mailmessages WHERE messageid = ? AND MessageSpamFlag = 0 AND MessageDeleteFlag = 0";
   $query2 = "SELECT Username FROM users WHERE userID = ?";
   $stmnt = $db -> prepare($query);
   $stmnt -> bind_param('i',$mID);
@@ -97,6 +97,7 @@ function get_email_from_list($mID){
   $_SESSION['currentmessage']["messagetime"] = $data['MessageTimeSent'];
   $_SESSION['currentmessage']["messageisread"] = $data['MessageReadFlag'];
   $_SESSION['currentmessage']["messageisspam"] = $data['MessageSpamFlag'];
+  $_SESSION['currentmessage']["messagedeleted"] = $data['MessageDeleteFlag'];
   $_SESSION['currentmessage']["messagesubject"] = $data['MessageSubject'];
   $_SESSION['currentmessage']["messagebody"] = $data['MessageBody'];
   //get the user name of the sender.
@@ -151,7 +152,27 @@ function togglespamflag($mID){
 }
 
 function toggledelete($mID){
-  //here will be simular to teh other flag flippers :)
+  //here will be simular to the other flag flippers :)
+  //delete is special as it requires Admin or staff privlages to undelete a message.
+  
+  global $db, $dashboard_message;
+  //flip bit if is read is 0 make it 1, else make it 0
+  if ($_SESSION['currentmessage']['messageisspam'] === 0){
+    $query = "UPDATE mailmessages SET MessageDeleteFlag = 1, MessageReadFlag = 1 WHERE MessageId = ?";
+  }else{
+    $dashboard_message = "<p class='alert alert-danger'>The db query could not be created.</p>";
+  }
+  $stmnt = $db -> prepare($query);
+  if (!$stmnt) {
+   echo var_dump($stmnt ->error);
+  }
+  $stmnt -> bind_param("i",$mID);
+  //if (!$stmnt) {
+  //  echo var_dump($stmnt ->error);
+  //}
+  if (!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
 }
 
 function getReadStatus($mID){
