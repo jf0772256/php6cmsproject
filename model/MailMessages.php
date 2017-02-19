@@ -30,7 +30,7 @@ function get_emailList($user){
   global $db, $dashboard_message;
   //gets a list of PMs from server and returns them based on recip userID
   $message_Data=array();
-  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? AND MessageSpamFlag = 0 ORDER BY mailmessages.MessageTimeSent DESC";
+  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? AND MessageSpamFlag = 0 AND MessageDeleteFlag = 0 ORDER BY mailmessages.MessageTimeSent DESC";
   $stmnt = $db -> prepare($query);
   $stmnt->bind_param("i",$user);
   if (!$stmnt->execute()){
@@ -154,7 +154,7 @@ function togglespamflag($mID){
 function toggledelete($mID){
   //here will be simular to the other flag flippers :)
   //delete is special as it requires Admin or staff privlages to undelete a message.
-  
+
   global $db, $dashboard_message;
   //flip bit if is read is 0 make it 1, else make it 0
   if ($_SESSION['currentmessage']['messageisspam'] === 0){
