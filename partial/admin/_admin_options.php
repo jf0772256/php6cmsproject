@@ -41,6 +41,13 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
+                <input type="submit" name="rvwDelNPurge" value="Message Purge Que" class="btn btn-primary btn-block">
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </div>

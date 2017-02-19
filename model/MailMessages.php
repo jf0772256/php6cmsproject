@@ -229,4 +229,78 @@ function Undelete_Message($mid){
   }
 }
 
+function get_deleted_messages_count(){
+  //gets a count to return and to be used as a badge value
+  global $db, $dashboard_message;
+  $count_Data=array();
+  $query = "SELECT COUNT(MessageRecipent) AS DeletedMessages FROM mailmessages WHERE MessageDeleteFlag = 1";
+  $stmnt = $db -> prepare($query);
+
+  if(!$stmnt){
+   echo var_dump($stmnt);
+  }
+
+  if(!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+    //echo var_dump($stmnt->error);
+  }
+  $result = $stmnt -> get_result();
+  while ($data = $result->fetch_assoc()){
+    $count_Data[] = $data;
+  }
+
+  $retVal = (int)($count_Data[0]['DeletedMessages']);
+  return $retVal;
+}
+
+function get_spam_messages_count(){
+  //gets a count to return and to be used as a badge value
+  global $db, $dashboard_message;
+  $count_Data=array();
+  $query = "SELECT COUNT(MessageRecipent) AS SpamMessages FROM mailmessages WHERE MessageSpamFlag = 1";
+  $stmnt = $db -> prepare($query);
+  if(!$stmnt){
+   echo var_dump($stmnt);
+  }
+
+  if(!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+    //echo var_dump($stmnt->error);
+  }
+
+  $result = $stmnt -> get_result();
+
+  while ($data = $result->fetch_assoc()){
+    $count_Data[] = $data;
+  }
+
+  $retVal = (int)($count_Data[0]['SpamMessages']);
+  return $retVal;
+}
+
+function get_delete_flagged_messages($selectorName = ''){
+  //gets a list of all messages that are in the database. and echos them to a form select
+  global $db,$dashboard_message_users;
+  $user_Data=array();
+  $query ="SELECT mailmessages.MessageId, mailmessages.messageSubject FROM mailmessages WHERE mailmessages.MessageDeleteFlag = 1";
+  $stmnt = $db -> prepare($query);
+  $stmnt -> execute();
+  $results = $stmnt -> get_result();
+  while ($data = $results->fetch_assoc()){
+    $user_Data[] = $data;
+  }
+
+  if (sizeof($user_Data) === 0){
+    $dashboard_message_users = "<p class='alert alert-success'>There are no deleted messages</p>";
+  }else{
+    echo var_dump($user_Data);
+    echo '<select name="'.$selectorName.'" class="form-control">';
+    foreach ($user_Data as $key => $value) {
+        $mNum = $user_Data[$key]['MessageId'];
+        $mSub = $user_Data[$key]['messageSubject'];
+        echo "<option value='$mNum'>$mSub</option>";
+    }
+    echo "</select>";
+  }
+}
 ?>
