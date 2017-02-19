@@ -164,7 +164,7 @@
           //function to create a new message
           //there willl more code for this feature later
           unset($_SESSION["currentmessage"]);
-          include("partial/user/_new_message.php");
+          include("partial/user/_new_message.php"); 
 
         }elseif (isset($_POST["sendMessage"])){
           //function to create a new message
