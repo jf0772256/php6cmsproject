@@ -6,7 +6,7 @@ function check_new_messages($user){
   //requires user id to get from server the PM assigned to a specific user.
   global $db, $dashboard_message;
   $count_Data=array();
-  $query = "SELECT COUNT(MessageRecipent) AS NewMessages FROM mailmessages WHERE MessageRecipent = ? AND MessageReadFlag = 0";
+  $query = "SELECT COUNT(MessageRecipent) AS NewMessages FROM mailmessages WHERE MessageRecipent = ? AND MessageReadFlag = 0 AND MessageSpamFlag = 0 AND MessageDeleteFlag = 0";
   $stmnt = $db -> prepare($query);
   if(!$stmnt){
    echo var_dump($stmnt);
