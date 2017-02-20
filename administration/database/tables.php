@@ -202,7 +202,9 @@
       IssueUserID INT NOT NULL,
       IssueTimeStamp TIMESTAMP NOT NULL,
       IssueTitle VARCHAR(30) NOT NULL,
-      IssueDescription VARCHAR(250) NOT NULL,
+      IssueDescription VARCHAR(500) NOT NULL,
+      IssueStatus TINYINT(1) DEFAULT 0,
+      IssueAssignedID INT,
       SiteIssue TINYINT(1) DEFAULT 0,
       PostIssue TINYINT(1) DEFAULT 0,
       CommentIssue TINYINT(1) DEFAULT 0,
@@ -212,15 +214,37 @@
       IssueWCommentID INT DEFAULT 0,
       PRIMARY KEY (IssueID),
       FOREIGN KEY (IssueUserID) REFERENCES Users(userID),
-      INDEX isSiteIssue_Idx (SiteIssue),
-      INDEX isPostIssue_Idx (PostIssue),
-      INDEX isCommentIssue_Idx (CommentIssue),
-      INDEX isUserIssue_Idx (UserIssue)
+      FOREIGN KEY (IssueAssignedID) REFERENCES Users(userID),
+      INDEX Assgignedto_Indx (IssueAssignedID),
+      INDEX IssueStatusValue_Indx (IssueStatus),
+      INDEX isSiteIssue_Indx (SiteIssue),
+      INDEX isPostIssue_Indx (PostIssue),
+      INDEX isCommentIssue_Indx (CommentIssue),
+      INDEX isUserIssue_Indx (UserIssue)
     )";
 
     $result = $db -> query($query);
     if (!$result){
       $error_message = "There was a problem with the Issue Reporting table creation and it has stopped.";
+      include("error/db_error.php");
+      exit();
+    }
+
+    //now for the messaging for the issue... if needed, but the bable will be used to store messages off table re issues.
+    $query ="CREATE TABLE $ifNotExistsQuery IssueMessages
+    (
+      IssueMessageID INT UNSIGNED NOT NULL Auto_Increment,
+      ReporterID INT NOT NULL,
+      AssigneeID INT NOT NULL,
+      MessageBody VARCHAR(5000),
+      PRIMARY KEY (IssueMessageID),
+      FOREIGN KEY (ReporterID) REFERENCES IssuesReorts(IssueUserID),
+      FOREIGN KEY (AssigneeID) REFERENCES IssuesReorts(IssueAssignedID)
+    )";
+
+    $result = $db -> query($query);
+    if (!$result){
+      $error_message = "There was a problem with the Issue Messaging table creation and it has stopped.";
       include("error/db_error.php");
       exit();
     }
@@ -265,7 +289,7 @@
     // we are going to test this command to see if the process will work...
     global $db;
     $dbIsDirty = check_preexisting_tables();
-    $query = "DROP TABLE ContentComments, Content, PostComments, Posts, roles, MailMessages, IssuesReorts, Users";
+    $query = "DROP TABLE ContentComments, Content, PostComments, Posts, roles, MailMessages, IssueMessages, IssuesReorts, Users";
     if ($dbIsDirty){
       $result = $db -> query($query); //no need to prep the query as no injection is expected in hardcoded values
       if (!$result){
