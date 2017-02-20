@@ -121,6 +121,7 @@
         }elseif (isset($_POST["readMessages"])){
           //function to read messages
           //ill be a function... but want to show the actions;
+          unset($_SESSION['currentmessage']);
           include("partial/user/_message_list.php");
           include("partial/user/_read_message.php");
 

@@ -30,7 +30,7 @@ function get_emailList($user){
   global $db, $dashboard_message;
   //gets a list of PMs from server and returns them based on recip userID
   $message_Data=array();
-  $query = "SELECT messageid, messageSubject, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? AND MessageSpamFlag = 0 AND MessageDeleteFlag = 0 ORDER BY mailmessages.MessageTimeSent DESC";
+  $query = "SELECT messageid, messageSubject, MessageReadFlag, Username FROM mailmessages JOIN users ON mailmessages.MessageSender = users.userID WHERE mailmessages.messageRecipent = ? AND MessageSpamFlag = 0 AND MessageDeleteFlag = 0 ORDER BY mailmessages.MessageTimeSent DESC";
   $stmnt = $db -> prepare($query);
   $stmnt->bind_param("i",$user);
   if (!$stmnt->execute()){
@@ -110,14 +110,33 @@ function get_email_from_list($mID){
   $result = $stmnt ->get_result();
   $data = $result -> fetch_assoc();
   $_SESSION['currentmessage']['messagesenderUN'] = $data['Username'];
+  set_Read($_SESSION['currentmessage']['messagenumber']);
+}
+
+function set_Read($mID){
+  global $db, $dashboard_message;
+  //flip bit if is read is 0 make it 1, else make it 0
+  $query = "UPDATE mailmessages SET MessageReadFlag = 1 WHERE MessageId = ?";
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param("i",$mID);
+  if (!$stmnt -> execute()){
+    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
+  }
+  $query = "SELECT MessageReadFlag FROM mailmessages WHERE MessageId = ?";
+  $stmnt = $db -> prepare($query);
+  $stmnt -> bind_param("i",$mID);
+  $stmnt -> execute();
+  $result = $stmnt ->get_result();
+  $data = $result -> fetch_assoc();
+  $_SESSION["currentmessage"]["messageisread"] = $data["MessageReadFlag"];
 }
 
 function togglereadflag($mID){
   global $db, $dashboard_message;
   //flip bit if is read is 0 make it 1, else make it 0
-  if ($_SESSION['currentmessage']['messageisread'] === 0){
-    $query = "UPDATE mailmessages SET MessageReadFlag = 1 WHERE MessageId = ?";
-  }else{
+  if ($_SESSION['currentmessage']['messageisread'] === 1){
+    //$query = "UPDATE mailmessages SET MessageReadFlag = 1 WHERE MessageId = ?";
+  //}else{
     $query = "UPDATE mailmessages SET MessageReadFlag = 0 WHERE MessageId = ?";
   }
 
