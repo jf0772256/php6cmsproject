@@ -200,6 +200,7 @@
     (
       IssueID INT UNSIGNED NOT NULL Auto_Increment,
       IssueUserID INT NOT NULL,
+      IssueTimeStamp TIMESTAMP NOT NULL,
       IssueTitle VARCHAR(30) NOT NULL,
       IssueDescription VARCHAR(250) NOT NULL,
       SiteIssue TINYINT(1) DEFAULT 0,
