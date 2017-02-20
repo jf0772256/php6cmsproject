@@ -10,13 +10,10 @@
     </div>
     <div class="panel-body">
       <!-- code to display list below -->
-      <!-- for now just a dummy text -->
       <?php
-      //if (isset($_SESSION["currentmessage"])) {unset($_SESSION["currentmessage"]);}
       $messageArray = array();
       $messageArray = get_emailList($_SESSION['personID']);
       $maxMessage = 0;
-      //echo var_dump($messageArray);
       if (!empty($messageArray) && !isset($_SESSION['currentmessage'])) {
         foreach ($messageArray as $id => $val) {
           $maxMessage = max(array($maxMessage, $val['messageid']));
@@ -35,12 +32,11 @@
           echo "<div class='list-group'>";
           if ($msgisread){
             echo "<button type='submit' name='messageRdme' class='list-group-item'>";
-            echo "<h5 class='list-group-item-heading'>Subject: $msgSub</h5>";
+            echo "<h5 class='list-group-item-heading'>$msgSub</h5>";
           }else{
             echo "<button type='submit' name='messageRdme' class='list-group-item list-group-item-info'>";
-            echo "<h5 class='list-group-item-heading' style='font-weight:bold;'>Subject: $msgSub</h5>";
+            echo "<h5 class='list-group-item-heading' style='font-weight:bold;'>$msgSub</h5>";
           }
-          echo "<h5 class='list-group-item-text'>From: $msgSndr</h5>";
           echo "</button></div></form>";
         }
       }else{

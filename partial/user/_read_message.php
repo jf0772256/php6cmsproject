@@ -22,7 +22,7 @@
       echo "<p>From: $from</p>";
       echo "<p>Time Received: $tme</p>";
       echo "<hr />";
-      echo $_SESSION['currentmessage']['messagebody'];
+      echo nl2br($_SESSION['currentmessage']['messagebody']);
       echo "<hr /><br />";
       ?>
       <form method="post">
@@ -39,8 +39,7 @@
           echo "<input type='hidden' name='msgid' value='$msgid' />";
         ?>
         <div class="form-group">
-          <input type="submit" name="replymsg" value="Reply" class="btn btn-success"> &nbsp;&nbsp; || &nbsp;&nbsp; <!-- new seperator to seperate actions -->
-          <!-- <input type="submit" name="toggleread" value="Mark Read/Unread" class="btn btn-success"> --> <!-- This button didnt work anyway. -->
+          <input type="submit" name="replymsg" value="Reply" class="btn btn-success"> &nbsp;&nbsp; || &nbsp;&nbsp;
           <input type="submit" name="toggledel" value="Delete Message" class="btn btn-danger">
           <input type="submit" name="togglespam" value="Mark Spam" class="btn btn-danger">
         </div>
