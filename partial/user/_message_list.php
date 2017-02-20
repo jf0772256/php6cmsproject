@@ -15,8 +15,13 @@
       //if (isset($_SESSION["currentmessage"])) {unset($_SESSION["currentmessage"]);}
       $messageArray = array();
       $messageArray = get_emailList($_SESSION['personID']);
+      $maxMessage = 0;
       //echo var_dump($messageArray);
       if (!empty($messageArray)) {
+        foreach ($messageArray as $id => $val) {
+          $maxMessage = max(array($maxMessage, $val['messageid']));
+          // code for max array for associated array values found on Stack overflow.com // http://stackoverflow.com/questions/5093171/hightest-value-of-an-associative-array
+        }
         foreach ($messageArray as $key => $value) {
           $msgSub = $messageArray[$key]['messageSubject'];
           $msgSndr = $messageArray[$key]['Username'];
@@ -29,6 +34,7 @@
           echo "<h5 class='list-group-item-text'>From: $msgSndr</h5>";
           echo "</button></div></form>";
         }
+        get_email_from_list($maxMessage);
       }else{
         echo "You do not have any messages yet.";
       }
