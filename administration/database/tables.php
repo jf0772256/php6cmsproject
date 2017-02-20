@@ -241,7 +241,7 @@
       MessageBody VARCHAR(5000),
       PRIMARY KEY (IssueMessageID),
       FOREIGN KEY (ReporterID) REFERENCES IssuesReorts(IssueUserID),
-      FOREIGN KEY (AssigneeID) REFERENCES IssuesReorts(IssueAssignedID)
+      FOREIGN KEY (AssigneeID) REFERENCES IssuesReorts(IssueAssignedID),
       INDEX ReporterNewMessage_Indx (R_New),
       INDEX AssigneeNewMessage_Indx (A_New)
     )";
