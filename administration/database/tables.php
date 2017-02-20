@@ -178,7 +178,7 @@
       MessageReadFlag TINYINT(1) DEFAULT 0,
       MessageSpamFlag TINYINT(1) DEFAULT 0,
       MessageDeleteFlag TINYINT(1) DEFAULT 0,
-      MessageSubject VARCHAR(50) NOT NULL,
+      MessageSubject VARCHAR(100) NOT NULL,
       MessageBody VARCHAR(1000) NOT NULL,
       PRIMARY KEY (MessageId),
       FOREIGN KEY (MessageSender) REFERENCES Users(userID),

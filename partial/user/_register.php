@@ -1,3 +1,4 @@
+
 <!-- the registration form here -->
 <form class="form-horizontal" method="post">
   <!-- space for an error message to show. -->
