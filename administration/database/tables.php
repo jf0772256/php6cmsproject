@@ -236,10 +236,14 @@
       IssueMessageID INT UNSIGNED NOT NULL Auto_Increment,
       ReporterID INT NOT NULL,
       AssigneeID INT NOT NULL,
+      R_New TINYINT(1) DEFAULT 0,
+      A_New TINYINT(1) DEFAULT 0,
       MessageBody VARCHAR(5000),
       PRIMARY KEY (IssueMessageID),
       FOREIGN KEY (ReporterID) REFERENCES IssuesReorts(IssueUserID),
       FOREIGN KEY (AssigneeID) REFERENCES IssuesReorts(IssueAssignedID)
+      INDEX ReporterNewMessage_Indx (R_New),
+      INDEX AssigneeNewMessage_Indx (A_New)
     )";
 
     $result = $db -> query($query);
