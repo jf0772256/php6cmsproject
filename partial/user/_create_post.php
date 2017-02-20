@@ -20,8 +20,8 @@
             </div>
             <div class="form-group">
               <label for="postBody" class="control-label">Post Body</label>
-              <textarea name="postBody" rows="10" cols="65" maxlength="1000"></textarea>
-              <p style="font-style:italic;"> 1,000 characters MAX!</p>
+              <textarea name="postBody" rows="10" cols="65" maxlength="5000" class="form-conrtol"></textarea>
+              <p style="font-style:italic;"> 5,000 characters MAX!</p>
             </div>
             <div class="form-group">
               <input type="submit" name="submitNewPost" value="Create Post" class="btn btn-primary">

@@ -47,7 +47,7 @@
       userID INT NOT NULL,
       postTitle VARCHAR(25) NOT NULL,
       postSlug VARCHAR(12) NOT NULL,
-      postBody VARCHAR(1000) NOT NULL,
+      postBody VARCHAR(5000) NOT NULL,
       postHelp INT DEFAULT 0,
       postNeg INT DEFAULT 0,
       postCommentCNT INT DEFAULT 0,
