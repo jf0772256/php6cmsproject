@@ -194,6 +194,35 @@
       include("error/db_error.php");
       exit();
     }
+    //Query to create a report-issue-table
+    //used for creating site issues, as well as reporting users, and posts.
+    $query ="CREATE TABLE $ifNotExistsQuery IssuesReorts
+    (
+      IssueID INT UNSIGNED NOT NULL Auto_Increment,
+      IssueUserID INT NOT NULL,
+      IssueTitle VARCHAR(30) NOT NULL,
+      IssueDescription VARCHAR(250) NOT NULL,
+      SiteIssue TINYINT(1) DEFAULT 0,
+      PostIssue TINYINT(1) DEFAULT 0,
+      CommentIssue TINYINT(1) DEFAULT 0,
+      UserIssue TINYINT(1) DEFAULT 0,
+      IssuePostID INT ,
+      IssueWUserID INT ,
+      IssueWCommentID INT ,
+      PRIMARY KEY (IssueID),
+      FOREIGN KEY (IssueUserID) REFERENCES Users(userID),
+      INDEX isSiteIssue_Idx (SiteIssue),
+      INDEX isPostIssue_Idx (PostIssue),
+      INDEX isCommentIssue_Idx (CommentIssue),
+      INDEX isUserIssue_Idx (UserIssue)
+    )";
+
+    $result = $db -> query($query);
+    if (!$result){
+      $error_message = "There was a problem with the Issue Reporting table creation and it has stopped.";
+      include("error/db_error.php");
+      exit();
+    }
 
     //if completed then it will return true...
     return true;
@@ -235,7 +264,7 @@
     // we are going to test this command to see if the process will work...
     global $db;
     $dbIsDirty = check_preexisting_tables();
-    $query = "DROP TABLE ContentComments, Content, PostComments, Posts, roles, MailMessages, Users";
+    $query = "DROP TABLE ContentComments, Content, PostComments, Posts, roles, MailMessages, IssuesReorts, Users";
     if ($dbIsDirty){
       $result = $db -> query($query); //no need to prep the query as no injection is expected in hardcoded values
       if (!$result){

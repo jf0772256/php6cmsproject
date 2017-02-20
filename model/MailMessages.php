@@ -131,23 +131,6 @@ function set_Read($mID){
   $_SESSION["currentmessage"]["messageisread"] = $data["MessageReadFlag"];
 }
 
-function togglereadflag($mID){
-  global $db, $dashboard_message;
-  //flip bit if is read is 0 make it 1, else make it 0
-  if ($_SESSION['currentmessage']['messageisread'] === 1){
-    //$query = "UPDATE mailmessages SET MessageReadFlag = 1 WHERE MessageId = ?";
-  //}else{
-    $query = "UPDATE mailmessages SET MessageReadFlag = 0 WHERE MessageId = ?";
-  }
-
-  $stmnt = $db -> prepare($query);
-  $stmnt -> bind_param("i",$mID);
-  if (!$stmnt -> execute()){
-    $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
-  }
-  getReadStatus($mID);
-}
-
 function togglespamflag($mID){
   global $db, $dashboard_message;
   //flip bit if is read is 0 make it 1, else make it 0
@@ -192,21 +175,6 @@ function toggledelete($mID){
   if (!$stmnt -> execute()){
     $dashboard_message = "<p class='alert alert-danger'>The db query faulted.</p>";
   }
-}
-
-function getReadStatus($mID){
-  global $db, $dashboard_message;
-  $query = "SELECT MessageReadFlag FROM mailmessages WHERE MessageId = ?";
-  $stmnt = $db -> prepare($query);
-  $stmnt -> bind_param("i",$mID);
-  $stmnt -> execute();
-  $result = $stmnt ->get_result();
-  $data = $result -> fetch_assoc();
-  $_SESSION["currentmessage"]["messageisread"] = $data["MessageReadFlag"];
-  error_reporting(0);
-  $page = $_SERVER['index.php'];
-  echo '<meta http-equiv="Refresh" content="0;' . $page . '">';
-  error_reporting(E_ALL);
 }
 
 function purgeSpam(){
