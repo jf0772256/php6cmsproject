@@ -38,8 +38,10 @@
         <div class="col-md-6">
           <form method="post">
             <label>Review pending actions:</label>
-            <div class="">
-
+            <div class="form-group">
+              <select class="form-control" name="">
+                <option value=""></option>
+              </select>
             </div>
             <div class="form-group">
               <input type="submit" name="dummysubmit" value="Submit Action" class="btn btn-primary btn-block">
@@ -49,8 +51,10 @@
         <div class="col-md-6">
           <form method="post">
             <label>something else here:</label>
-            <div class="">
-
+            <div class="form-group">
+              <select class="form-control" name="">
+                <option value=""></option>
+              </select>
             </div>
             <div class="form-group">
               <input type="submit" name="dummysubmit" value="Submit Action" class="btn btn-primary btn-block">
