@@ -211,7 +211,7 @@
       IssueTimeStamp TIMESTAMP NOT NULL,
       IssueTitle VARCHAR(30) NOT NULL,
       IssueDescription VARCHAR(500) NOT NULL,
-      IssueStatus TINYINT(1) DEFAULT 0,
+      IssueStatus TINYINT(1) DEFAULT 1,
       IssueAssignedID INT,
       SiteIssue TINYINT(1) DEFAULT 0,
       PostIssue TINYINT(1) DEFAULT 0,
