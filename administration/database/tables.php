@@ -17,12 +17,12 @@
     //echo var_dump($version );
     foreach ($version as $versions) {
       if ($versions['Variable_name'] == "version_comment") {
-        echo var_dump($versions['Value']);
+        //echo var_dump($versions['Value']);
         $ver_name = $versions['Value'];
       }
     }
     //$ver_name = $versions['Value'];
-    echo var_dump(substr($ver_name,0,5));
+    //echo var_dump(substr($ver_name,0,5));
     if (substr($ver_name,0,5)==="MySQL") {
       return create_tables_MySQL();
     }elseif (substr($ver_name,0,5)==="Maria") {
