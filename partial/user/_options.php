@@ -48,6 +48,13 @@
           <div class="row">
             <div class="col-xs-12">
               <div class="form-group">
+                <input type="submit" name="issuetracker" value="Issue Tracking UI" class="btn btn-primary btn-xs btn-block">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group">
                 <!-- <input type="submit" name="readMessages" value="Read Messages" class="btn btn-primary btn-block"> -->
                 <button type="submit" name="readMessages" class="btn btn-primary btn-xs btn-block">Read Messages&nbsp;&nbsp;<?php echo "<span class='badge'>$disp_msg_cnt</span>"; ?></button>
               </div>

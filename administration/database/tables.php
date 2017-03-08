@@ -538,24 +538,38 @@
     $query ="CREATE TABLE $ifNotExistsQuery IssueMessages
     (
       IssueMessageID INT UNSIGNED NOT NULL Auto_Increment,
+<<<<<<< HEAD
+      IssueID INT NOT NULL,
+=======
       IssueID INT UNSIGNED NOT NULL,
+>>>>>>> refs/remotes/origin/master
       ReporterID INT NOT NULL,
       AssigneeID INT NOT NULL,
       R_New TINYINT(1) DEFAULT 0,
       A_New TINYINT(1) DEFAULT 0,
       MessageBody VARCHAR(5000),
       PRIMARY KEY (IssueMessageID),
+<<<<<<< HEAD
+      FOREIGN KEY (IssueID) REFERENCES IssuesReorts(IssueID),
+      FOREIGN KEY (ReporterID) REFERENCES IssuesReorts(IssueUserID),
+      FOREIGN KEY (AssigneeID) REFERENCES IssuesReorts(IssueAssignedID),
+=======
       FOREIGN KEY (IssueID) REFERENCES IssuesReports(IssueID),
       FOREIGN KEY (ReporterID) REFERENCES IssuesReports(IssueUserID),
       FOREIGN KEY (AssigneeID) REFERENCES IssuesReports(IssueAssignedID),
+>>>>>>> refs/remotes/origin/master
       INDEX ReporterNewMessage_Indx (R_New),
       INDEX AssigneeNewMessage_Indx (A_New)
     )";
 
     $result = $db -> query($query);
     if (!$result){
+<<<<<<< HEAD
+      $error_message = "There was a problem with the Issue Messaging table creation and it has stopped.";
+=======
       $error_num = $db -> error;
       $error_message = "There was a problem with the Issue Messaging table creation and it has stopped. ErrorNumber: " . $error_num;
+>>>>>>> refs/remotes/origin/master
       include("error/db_error.php");
       exit();
     }
@@ -600,7 +614,7 @@
     // we are going to test this command to see if the process will work...
     global $db;
     $dbIsDirty = check_preexisting_tables();
-    $query = "DROP TABLE ContentComments, Content, PostComments, Posts, roles, MailMessages, IssueMessages, IssuesReports, Users";
+    $query = "DROP TABLE ContentComments, Content, PostComments, Posts, roles, MailMessages, IssueMessages, IssuesReorts, Users";
     if ($dbIsDirty){
       $result = $db -> query($query); //no need to prep the query as no injection is expected in hardcoded values
       if (!$result){

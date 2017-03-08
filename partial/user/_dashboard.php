@@ -1,5 +1,5 @@
 <?php global $dashboard_message; ?>
-<div class="col-md-8 offset-2">
+<div class="col-md-8">
   <div class="panel panel-default">
     <div class="panel-heading">
       <h2><?php echo $_SESSION["fullname"] ?></h2>

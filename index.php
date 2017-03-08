@@ -5,6 +5,7 @@
   include_once("model/Admin.php");
   include_once("model/Posts.php");
   include_once("model/MailMessages.php");
+  include_once("model/IssueTracker.php");
   if (empty($pageTitle)) {$pageTitle = "Home!";}
   include("partial/_head.php");
   //session_start();

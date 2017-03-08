@@ -176,6 +176,10 @@
           //adding action to the button
           include("partial/admin/_mailpurgeandudelete.php");
 
+        }elseif (isset($_POST['issuetracker'])) {
+          //adding action to the issue tracking ui button
+          include("partial/user/_issue_user_tasks.php");
+
         }elseif (isset($_POST["toggledel"])) {
           //toggle delete status
           toggledelete($_SESSION['currentmessage']['messagenumber']);

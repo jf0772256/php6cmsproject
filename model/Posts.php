@@ -82,7 +82,7 @@ function get_all_posts(){
       echo '<article>';
       echo "<h3>$Title</h3>";
       echo "<h4>By: $Author</h4>";
-      echo "<p>$PostBody</p>";
+      echo nl2br($PostBody);
       echo '<form method="post">';
       echo "<input type='submit' name='dummybtn0' class='btn btn-primary' value='Read More'>";
       echo '</form>';
