@@ -23,9 +23,9 @@
     }
     //$ver_name = $versions['Value'];
     //echo var_dump(substr($ver_name,0,5));
-    if (substr($ver_name,0,5)==="MySQL") {
+    if (substr($ver_name,0,5)==="MySQL" || substr($ver_name,0,5)==="mysql") {
       return create_tables_MySQL();
-    }elseif (substr($ver_name,0,5)==="Maria") {
+    }elseif (substr($ver_name,0,5)==="Maria" || substr($ver_name,0,5)==="maria") {
       return create_tables_MariaDB();
     }else{
       echo "<p class='alert alert-danger'>Invalid Database Connection. Please only use MySQL or MariaDB servers.</p>";
