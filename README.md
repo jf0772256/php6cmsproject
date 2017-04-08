@@ -1,6 +1,8 @@
 # Single Page MVC PHP Content Management System
 ## By Jesse Fender
 
+## Development Currently On hold - will return to this project when I get the few classes worked out :)
+
 ### Purpose & Introduction:
 This is a pet project to test ability to pick up PHP and deploy it in a real world like application. This project was started in early January and have been regularly added to, but only was put on git hub Febuary 5th. I have no intention of selling or using this code past the completion... This project helps prove my skill with PHP since January 1, through the help of instructors with my CIS  namely Kirsten Markley, and friend Brian Shinn, have helped me learn the language rapidly and use it in real world application.
 
