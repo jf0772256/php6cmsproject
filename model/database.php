@@ -10,6 +10,7 @@ class database
   private $password = "";
   private $database = "";
   private $db = null;
+  public $error_message = "";
   public function __construct(){
     //
   }
@@ -19,9 +20,9 @@ class database
     $this->userName = $user;
     $this->password = $password;
     $this->db = new mysqli($this->host,$this->userName,$this->password,$this->database);
-    $error_message = $db->connect_error;
+    $this->error_message = $this->db->connect_error;
     //if message exists then display it//
-    if ($error_message != null) {
+    if ($this->error_message != null) {
       include("error/conn_error.php");
       exit();
     }
@@ -34,7 +35,4 @@ class database
     exit();
   }
 }
-
-
-
 ?>
